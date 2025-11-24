@@ -1,10 +1,11 @@
-# Fyrst þurfum við að skilgreina a, b og fallið
+# Fyrst skilgreinum við leitarbilin og fallið
 
 punktar = [[-9.45, -9.4], [-1.4, -1.3]]
 
 f = lambda s: 2*s**4 + 23*s**3 + 45*s**2 + 60*s + 50
 target_E = (1*10**(-10))        # target_E er markmiðsskekkjan
 
+# Við förum í gegnum hvert leitarbil
 for i in punktar:
 
     print(i)
