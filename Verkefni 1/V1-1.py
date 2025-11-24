@@ -76,21 +76,48 @@ for i in punktar:
 #================
 
 print("Niðurstöður:")
-print("|  Helmingunar, rót 1  |  Helmingunar, rót 2  |  Newton-Raphson, rót 1  |  Newton-Raphson, rót 2  |")
-print("---------------------------------------------------------------------------------------------------")
-print("|  ", end="")
+titles = ["Helmingunar, rót 1", "Helmingunar, rót 2", "Newton-Raphson, rót 1", "Newton-Raphson, rót 2"]
+for i in titles:
+    print("|   ", i, " "*(25-len(i)), end="", sep="")
+print("|")
+print("="*((25+4)*4+1))
 for i in niðurst:
-    print(i, end="  |  ")
+    print("|   ", i, " "*(25-len(str(i))), end="", sep="")
+print("|")
 print()
 print()
+
 print("Villur:")
-print("|  Ítrekun  |  Helmingunar, rót 1  |  Helmingunar, rót 2  |  Newton-Raphson, rót 1  |  Newton-Raphson, rót 2  |")
-print("---------------------------------------------------------------------------------------------------------------")
+print("| Ítrekun ", end="")
+for i in titles:
+    print("|   ", i, " "*(25-len(i)), end="", sep="")
+print("|")
+print("="*((25+4)*4+1+10))
 for i in range(len(villur[0])):
-    print(i, end="  |  ")
+    print("| ", i, " "*(8-len(str(i))), end="", sep="")
     for j in range(len(villur)):
         try:
-            print(villur[j][i], end="  |  ")
+            print("|   ", villur[j][i], " "*(25-len(str(villur[j][i]))), end="", sep="")
         except:
-            print("", end="  |  ")
-    print()
+            print("|   ", " "*(25), end="", sep="")
+    print("|")
+
+# print("Niðurstöður:")
+# print("|  Helmingunar, rót 1  |  Helmingunar, rót 2  |  Newton-Raphson, rót 1  |  Newton-Raphson, rót 2  |")
+# print("---------------------------------------------------------------------------------------------------")
+# print("|  ", end="")
+# for i in niðurst:
+#     print(i, end="  |  ")
+# print()
+# print()
+# print("Villur:")
+# print("|  Ítrekun  |  Helmingunar, rót 1  |  Helmingunar, rót 2  |  Newton-Raphson, rót 1  |  Newton-Raphson, rót 2  |")
+# print("---------------------------------------------------------------------------------------------------------------")
+# for i in range(len(villur[0])):
+#     print(i, end="  |  ")
+#     for j in range(len(villur)):
+#         try:
+#             print(villur[j][i], end="  |  ")
+#         except:
+#             print("", end="  |  ")
+#     print()
