@@ -1,4 +1,14 @@
 # Fyrst skilgreinum við leitarbilin og fallið
+from prettytable import PrettyTable
+
+def make_row(i, j, shit):
+    row = [i]
+    for k in range(j):
+        try:
+            row.append(shit[k][i])
+        except:
+            row.append("")
+    return row
 
 punktar = [[-9.45, -9.4], [-1.4, -1.3]]
 
@@ -75,22 +85,20 @@ for i in punktar:
 # Villur í töflu
 #================
 
+t = PrettyTable()
+t.field_names = ["Ítrekun", "Helmingunar, rót 1", "Helmingunar, rót 2", "Newton-Raphson, rót 1", "Newton-Raphson, rót 2"]
+
 print("Niðurstöður:")
-print("|  Helmingunar, rót 1  |  Helmingunar, rót 2  |  Newton-Raphson, rót 1  |  Newton-Raphson, rót 2  |")
+print("Helmingunar, rót 1 Helmingunar, rót 2 Newton-Raphson, rót 1 Newton-Raphson, rót 2")
 print("---------------------------------------------------------------------------------------------------")
-print("|  ", end="")
+print("", end="")
 for i in niðurst:
-    print(i, end="  |  ")
+    print(i, end="")
 print()
 print()
 print("Villur:")
-print("|  Ítrekun  |  Helmingunar, rót 1  |  Helmingunar, rót 2  |  Newton-Raphson, rót 1  |  Newton-Raphson, rót 2  |")
-print("---------------------------------------------------------------------------------------------------------------")
+print("Helmingunar, rót 1 Helmingunar, rót 2 Newton-Raphson, rót 1 Newton-Raphson, rót 2")
+#print("---------------------------------------------------------------------------------------------------------------")
 for i in range(len(villur[0])):
-    print(i, end="  |  ")
-    for j in range(len(villur)):
-        try:
-            print(villur[j][i], end="  |  ")
-        except:
-            print("", end="  |  ")
-    print()
+    t.add_row(make_row(i, len(villur), villur))
+print(t)
