@@ -15,7 +15,7 @@ punktar = [[-9.45, -9.4], [-1.4, -1.3]]
 f = lambda s: 2*s**4 + 23*s**3 + 45*s**2 + 60*s + 50
 f_ = lambda s: 8*s**3 + 69*s**2 + 90*s + 60
 
-target_E = (1*10**(-10))        # target_E er markmiðsskekkjan
+target_E = (1*10**(-3))        # target_E er markmiðsskekkjan
 
 niðurst = []
 villur = []
@@ -89,6 +89,7 @@ t = PrettyTable()
 t.field_names = ["Ítrekun", "Helmingunar, rót 1", "Helmingunar, rót 2", "Newton-Raphson, rót 1", "Newton-Raphson, rót 2"]
 
 print("Niðurstöður:")
+print(niðurst)
 
 print("Villur:")
 for i in range(len(villur[0])):
