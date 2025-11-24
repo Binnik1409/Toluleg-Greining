@@ -7,6 +7,7 @@ f_ = lambda s: 8*s**3 + 69*s**2 + 90*s + 60
 
 target_E = (1*10**(-10))        # target_E er markmiðsskekkjan
 
+niðurst = []
 villur = []
 
 #====================
@@ -44,6 +45,7 @@ for i in punktar:
         
         v.append(E)
 
+    niðurst.append(c)
     villur.append(v)
 
 #================
@@ -66,12 +68,22 @@ for i in punktar:
         if j == 20:
             break
 
+    niðurst.append(b)
     villur.append(v)
 
 #================
 # Villur í töflu
 #================
 
+print("Niðurstöður:")
+print("|  Helmingunar, rót 1  |  Helmingunar, rót 2  |  Newton-Raphson, rót 1  |  Newton-Raphson, rót 2  |")
+print("---------------------------------------------------------------------------------------------------")
+print("|  ", end="")
+for i in niðurst:
+    print(i, end="  |  ")
+print()
+print()
+print("Villur:")
 print("|  Ítrekun  |  Helmingunar, rót 1  |  Helmingunar, rót 2  |  Newton-Raphson, rót 1  |  Newton-Raphson, rót 2  |")
 print("---------------------------------------------------------------------------------------------------------------")
 for i in range(len(villur[0])):
