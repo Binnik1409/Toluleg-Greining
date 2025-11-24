@@ -4,7 +4,7 @@ import newton
 import f
 import Df
 
-TOL = 10**(-3)
+TOL = 10**(-14)
 
 def make_grid(R_low, R_high, I_low, I_high, N):
     R = numpy.linspace(R_low, R_high, N)
@@ -24,16 +24,4 @@ for x in grid:
     for y in x:
         results[-1].append(newton.newton(y, TOL, f.f, Df.Df))
 
-for x in results:
-    for y in x:
-        y = round(abs(y), 3)
-
-
-
-for x in results:
-    last_y = None
-    for y in x:
-        if y == last_y:
-            x.remove(y)
-        last_y = y
-
+results = [round(x, 5) for x in results]
