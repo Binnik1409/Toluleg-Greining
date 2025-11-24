@@ -4,5 +4,5 @@ def newton(x0,tol, f, Df):
     while abs(oldx-x)>tol:
         oldx=x
         x=x-f(x)/Df(x)
-    return [x, abs(oldx-x)]
+    return x
 
