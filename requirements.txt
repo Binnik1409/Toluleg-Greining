@@ -1,1 +1,5 @@
 prettytable
+sys
+os
+numpy
+newton
