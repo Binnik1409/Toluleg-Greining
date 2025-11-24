@@ -3,11 +3,15 @@
 punktar = [[-9.45, -9.4], [-1.4, -1.3]]
 
 f = lambda s: 2*s**4 + 23*s**3 + 45*s**2 + 60*s + 50
+f_ = lambda s: 8*s**3 + 69*s**2 + 90*s + 60
+
 target_E = (1*10**(-10))        # target_E er markmiðsskekkjan
 
 villur = []
 
-# Við förum í gegnum hvert leitarbil
+#====================
+# Helmingunaraðferð!
+#====================
 for i in punktar:
 
     a = i[0]
@@ -23,7 +27,7 @@ for i in punktar:
 
     v = [E]
 
-    while E >= target_E:
+    while E > target_E:
 
         c = (a+b)/2                 # c er miðpunktur a og b
     
@@ -42,8 +46,39 @@ for i in punktar:
 
     villur.append(v)
 
-print("|  Ítrekun  |  Villur, rót 1  |  Villur, rót 2  |")
-print("-------------------------------------------------")
+#================
+# Newton-Raphson
+#================
+for i in punktar:
+    a = i[0]
+    b = a - f(a)/f_(a)
+    E = abs(b-a)
+    
+    v = [E]
+    j = 0
+    while E > target_E:
+        b = a - f(a)/f_(a)
+        E = abs(b-a)
+        v.append(E)
+        a = b
 
+        j = j+1
+        if j == 20:
+            break
+
+    villur.append(v)
+
+#================
+# Villur í töflu
+#================
+
+print("|  Ítrekun  |  Helmingunar, rót 1  |  Helmingunar, rót 2  |  Newton-Raphson, rót 1  |  Newton-Raphson, rót 2  |")
+print("---------------------------------------------------------------------------------------------------------------")
 for i in range(len(villur[0])):
-    print(i, "  |", villur[0][i], "|", villur[1][i], "|")
+    print(i, end="  |  ")
+    for j in range(len(villur)):
+        try:
+            print(villur[j][i], end="  |  ")
+        except:
+            print("", end="  |  ")
+    print()
