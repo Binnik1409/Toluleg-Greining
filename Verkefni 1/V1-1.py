@@ -5,6 +5,8 @@ punktar = [[-9.45, -9.4], [-1.4, -1.3]]
 f = lambda s: 2*s**4 + 23*s**3 + 45*s**2 + 60*s + 50
 target_E = (1*10**(-10))        # target_E er markmiðsskekkjan
 
+villur = []
+
 # Við förum í gegnum hvert leitarbil
 for i in punktar:
 
@@ -19,7 +21,10 @@ for i in punktar:
     # Þá þurfum við að skilgreina while lykkjuna.
     # While lykkjan heldur áfram þar til skekkjan er minni en eða jafnt og markmiðsskekkjan.
 
+    v = [E]
+
     while E >= target_E:
+
         c = (a+b)/2                 # c er miðpunktur a og b
     
         if f(c) == 0:               # Ef fallgildið í c er 0, þá er c rótin
@@ -32,5 +37,13 @@ for i in punktar:
     
         n = n+1                     # Hækka fjölda ítrekana
         E = (b-a)/(2**n)            # Uppfæra skekkjuna
+        
+        v.append(E)
 
-    print(c)                        # Prenta rótina
+    villur.append(v)
+
+print("|  Ítrekun  |  Villur, rót 1  |  Villur, rót 2  |")
+print("-------------------------------------------------")
+
+for i in range(len(villur[0])):
+    print(i, "  |", villur[0][i], "|", villur[1][i], "|")
