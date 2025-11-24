@@ -8,8 +8,6 @@ target_E = (1*10**(-10))        # target_E er markmiðsskekkjan
 # Við förum í gegnum hvert leitarbil
 for i in punktar:
 
-    print(i)
-
     a = i[0]
     b = i[1]
     
