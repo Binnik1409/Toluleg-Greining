@@ -89,14 +89,6 @@ t = PrettyTable()
 t.field_names = ["Ítrekun", "Helmingunar, rót 1", "Helmingunar, rót 2", "Newton-Raphson, rót 1", "Newton-Raphson, rót 2"]
 
 print("Niðurstöður:")
-titles = ["Helmingunar, rót 1", "Helmingunar, rót 2", "Newton-Raphson, rót 1", "Newton-Raphson, rót 2"]
-
-
-for i in niðurst:
-    print("|   ", i, " "*(25-len(str(i))), end="", sep="")
-print("|")
-print()
-print()
 
 print("Villur:")
 for i in range(len(villur[0])):
