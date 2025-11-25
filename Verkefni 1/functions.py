@@ -1,3 +1,5 @@
+import math
+
 def f(s, m1=1, m2=2, k1=10, k2=5, c1=10, c2=1):
     coe1 = m1*m2
     coe2 = c2*(m1+m2*(c1+c2))
