@@ -2,14 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def golden_search(a, b, tol, f):
-    """
-    Leitar að minnsta gildi falls f á bilinu [a, b]
-    með gullsniðsaðferð.
-    Skilar (x_min, f(x_min), iterations).
-    """
-    phi = (np.sqrt(5) - 1) / 2  # ≈ 0.618
-
-    # Upphafspunktar (x1, x2) og fallgildi þeirra
+    phi = (np.sqrt(5) - 1) / 2
     x1 = a + (1 - phi) * (b - a)
     x2 = a + phi * (b - a)
     f1 = f(x1)
@@ -54,6 +47,7 @@ def f_c1(c1):
 
     # Reiknum rætur
     roots = np.roots(coeffs)
+    print(roots)
 
     # Veljum tvintrætur (með einhverju ímyndað gildi)
     complex_roots = [r for r in roots if abs(r.imag) > 1e-10]
@@ -73,17 +67,17 @@ if __name__ == "__main__":
 
     c1_star, f_star, n_it = golden_search(a, b, tol, f_c1)
 
-    print(f"Best c1 ≈ {c1_star:.6f}")
-    print(f"f(c1) ≈ {f_star:.6f}")
-    print(f"Fjöldi ítrekana: {n_it}")
+#     print(f"Best c1 ≈ {c1_star:.6f}")
+#     print(f"f(c1) ≈ {f_star:.6f}")
+#     print(f"Fjöldi ítrekana: {n_it}")
 
-cs = np.linspace(0, 30, 301)
-vals = [f_c1(c) for c in cs]
+# cs = np.linspace(0, 30, 301)
+# vals = [f_c1(c) for c in cs]
 
-plt.plot(cs, vals)
-plt.axvline(c1_star, linestyle="--")  # sýna optimum
-plt.xlabel("c1")
-plt.ylabel("f(c1) = max Re(s_i(c1))")
-plt.title("Raunhluti ríkjandi tvinntölurótar sem fall af c1")
-plt.grid(True)
-plt.show()
+# plt.plot(cs, vals)
+# plt.axvline(c1_star, linestyle="--")  # sýna optimum
+# plt.xlabel("c1")
+# plt.ylabel("f(c1) = max Re(s_i(c1))")
+# plt.title("Raunhluti ríkjandi tvinntölurótar sem fall af c1")
+# plt.grid(True)
+# plt.show()
