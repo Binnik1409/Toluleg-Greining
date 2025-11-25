@@ -7,12 +7,12 @@ b = 30
 
 tol = 10**(-10)
 
+c0 = goldensearch(a, b, tol, cfunc)
+
 c_vals = np.linspace(a, b, 1000)
 c = []
 for i in c_vals:
     c.append(cfunc(i, tol))
-
-c0 = goldensearch(a, b, tol, cfunc)
 
 print(c0)
 
