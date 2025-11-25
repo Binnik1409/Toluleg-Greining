@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import newton
-import f
-import Df
+from functions import f
+from functions import Df
 
 ROUND = 5
 TOL = 10**(-14)
