@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import newton
 import f
 import Df
@@ -36,3 +36,12 @@ all_results = list(set(all_results))
 
 print(len(all_results))
 
+gridReal = []
+gridImag = []
+for x in grid:
+    for y in x:
+        gridReal.append(y.real)
+        gridImag.append(y.imag)
+
+plt.plot(gridReal, gridImag, )
+plt.show()
