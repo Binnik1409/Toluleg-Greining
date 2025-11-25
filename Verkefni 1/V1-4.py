@@ -10,6 +10,9 @@ GRID_SIZE = 400 # fjöldi punkta í grid
 ROUND = ACCURACY
 TOL = 10**(-ACCURACY-1)
 
+X_RANGE = [-8, -6]
+Y_RANGE = [-1, 1]
+
 
 
 def make_grid(R_low, R_high, I_low, I_high, N):
@@ -24,7 +27,7 @@ def make_grid(R_low, R_high, I_low, I_high, N):
 #Býr til 400x400 grid af punktum
 
 
-grid = make_grid(-8, -6, -1, 1, GRID_SIZE)
+grid = make_grid(X_RANGE[0], X_RANGE[1], Y_RANGE[0], Y_RANGE[1], GRID_SIZE)
 
 results = []
 for x in grid:
@@ -41,7 +44,9 @@ for x in results:
 #Setur allar lausnir í einn lista
 
 four_solutions = list(set(four_solutions))
+four_solutions.sort()
 #Tekur út endurtektir af lausnum og endar í fjórum
+
 
 
 for i, x in enumerate(four_solutions):
@@ -76,7 +81,7 @@ plt.figure()
 for i,x in enumerate(groups):
     real = [j[0] for j in x]
     imag = [j[1] for j in x]
-    plt.scatter(real, imag, s=10, marker='o', linewidths=0, color=colors[i], label=four_solutions[i])
+    plt.scatter(real, imag, s=10, marker='.', linewidths=0, color=colors[i], label=four_solutions[i])
 plt.gca().set_aspect('equal', adjustable='box')
 plt.axis('on')
 plt.grid(False)
