@@ -49,7 +49,7 @@ def newton(x0, tol, f, Df, errors = False):
 
 def cfunc(c, tol):
     p = 1j
-    v = newton(p, tol, f(c1=c), Df(c1=c))
+    v = newton(p, tol, lambda_f(c1=c), lambda_Df(c1=c))
     return np.real(v)
 
 def goldensearch(a, b, tol, f):

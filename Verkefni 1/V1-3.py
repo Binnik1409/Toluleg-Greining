@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from functions import goldensearch, newton, f, Df, cfunc
+from functions import goldensearch, cfunc
 
 a = 0
 b = 30

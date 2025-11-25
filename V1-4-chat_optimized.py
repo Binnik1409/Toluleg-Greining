@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import functions as f
+import functions_all as f
 
 ROUND = 2
 TOL = 10**(-3)
