@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import functions as f
 
-ROUND = 5
-TOL = 10**(-6)
+ROUND = 2
+TOL = 10**(-3)
 
 def make_grid(R_low, R_high, I_low, I_high, N):
     R = np.linspace(R_low, R_high, N)
@@ -23,14 +23,14 @@ for x in grid:
     for y in x:
         results[-1].append(f.newton(y, TOL, f.f, f.Df))
 
-all_results = []
+four_solutions = []
 
 for x in results:
     for y in x:
-        all_results.append(np.round(y, ROUND))
+        four_solutions.append(np.round(y, ROUND))
 
 
-all_results = list(set(all_results))
+four_solutions = list(set(four_solutions))
 
 
 result_colors = []
@@ -39,10 +39,10 @@ for x in results:
     result_colors.append([])
     for y in x:
         y=np.round(y, ROUND)
-        if y in all_results:
-            result_colors[-1].append(all_results.index(y))
+        if y in four_solutions:
+            result_colors[-1].append(four_solutions.index(y))
         else:
-            print("Got", y, "which is not in all_results")
+            print("Got", y, "which is not in four_solutions")
             exit("Error: Result not one of four")
             
 groups = []
@@ -53,12 +53,14 @@ for i,x in enumerate(result_colors):
         groups[y].append((grid[i][j].real, grid[i][j].imag))
 colors = ["blue", "green", "red", "yellow"]
 
+
 plt.figure()
 for i,x in enumerate(groups):
     real = [j[0] for j in x]
     imag = [j[1] for j in x]
-    plt.scatter(real, imag, s=5, marker='.', linewidths=0, color=colors[i])
+    plt.scatter(real, imag, s=10, marker='o', linewidths=0, color=colors[i], label=four_solutions[i])
 plt.gca().set_aspect('equal', adjustable='box')
-plt.axis('off')
+plt.axis('on')
 plt.grid(False)
+plt.legend()
 plt.show()
