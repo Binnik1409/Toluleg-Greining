@@ -2,8 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 import functions as f
 
-ROUND = 2
-TOL = 10**(-3)
+
+ACCURACY = 2 # fjöldi aukastafna
+GRID_SIZE = 400 # fjöldi punkta í grid
+                #Hærri tala = hærri upplausn og lengri tími
+
+ROUND = ACCURACY
+TOL = 10**(-ACCURACY-1)
+
+
 
 def make_grid(R_low, R_high, I_low, I_high, N):
     R = np.linspace(R_low, R_high, N)
@@ -14,23 +21,32 @@ def make_grid(R_low, R_high, I_low, I_high, N):
         for j in I:
             grid[-1].append(i+j*1j)
     return grid
+#Býr til 400x400 grid af punktum
 
-grid = make_grid(-8, -6, -1, 1, 400)
+
+grid = make_grid(-8, -6, -1, 1, GRID_SIZE)
 
 results = []
 for x in grid:
     results.append([])
     for y in x:
         results[-1].append(f.newton(y, TOL, f.f, f.Df))
+#Notar newton aðferðina
 
 four_solutions = []
 
 for x in results:
     for y in x:
         four_solutions.append(np.round(y, ROUND))
-
+#Setur allar lausnir í einn lista
 
 four_solutions = list(set(four_solutions))
+#Tekur út endurtektir af lausnum og endar í fjórum
+
+
+for i, x in enumerate(four_solutions):
+    print("Lausn", (str(i+1) + ":"), x)
+#Sýnir lausnir
 
 
 result_colors = []
@@ -44,6 +60,7 @@ for x in results:
         else:
             print("Got", y, "which is not in four_solutions")
             exit("Error: Result not one of four")
+#Gefur hverri staðsetningu í gridinu tölu á bilinu 0-3 eftir hvaða lausn upphafspunktur gefur
             
 groups = []
 for i,x in enumerate(result_colors):
@@ -51,7 +68,8 @@ for i,x in enumerate(result_colors):
         while len(groups) < y+1:
             groups.append([])
         groups[y].append((grid[i][j].real, grid[i][j].imag))
-colors = ["blue", "green", "red", "yellow"]
+colors = ["blue", "green", "red", "black"]
+#Skiptir upphafspunktum niður í hópa eftir hvaða lausn þeir gefa
 
 
 plt.figure()
@@ -64,3 +82,4 @@ plt.axis('on')
 plt.grid(False)
 plt.legend()
 plt.show()
+#Plottar lausnir
