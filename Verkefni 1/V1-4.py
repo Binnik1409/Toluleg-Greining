@@ -36,5 +36,3 @@ all_results = list(set(all_results))
 
 print(len(all_results))
 
-for item in all_results:
-    print(item)
