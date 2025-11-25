@@ -10,7 +10,7 @@ Df = lambda s: 8*s**3 + 69*s**2 + 90*s + 60
 p = -5j
 tol = 10**(-10)
 
-x1 = newton(p, tol, f, Df)
+x1 = newton(p, tol, f, Df, errors=True)
 print(x1[0])
 
 x2 = np.conj(x1[0])
