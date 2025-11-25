@@ -1,7 +1,4 @@
-import sys
-import os
 import numpy as np
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from functions import newton
 
 f = lambda s: 2*s**4 + 23*s**3 + 45*s**2 + 60*s + 50
