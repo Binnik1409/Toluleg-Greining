@@ -8,13 +8,14 @@ b = 30
 tol = 10**(-10)
 
 c0 = goldensearch(a, b, tol, cfunc)
+c0_val = cfunc(c0, tol)
 
 c_vals = np.linspace(a, b, 1000)
 c = []
 for i in c_vals:
     c.append(cfunc(i, tol))
 
-print(c0)
+print(c0, ", ", c0_val)
 
 plt.plot(c_vals, c)
 plt.axvline(c0, linestyle = "--")
