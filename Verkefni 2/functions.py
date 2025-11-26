@@ -79,16 +79,16 @@ def qE0(t, A, B, C, w=2*np.pi/24):
     return(A*np.cos(float(w)*float(t))+B*np.sin(float(w)*float(t))+C)
 
 def poisuilles(x,G,p1,p0):
-    
+
     poisuilles_gildi = [
-    (G,   p1,  x[0]),       # q_1A 0
-    (G,   x[0], x[1]),      # q_AB 1
-    (G,   x[0], x[2]),      # q_AC 2
-    (G,   x[1], x[3]),      # q_BD 3
-    (G,   x[2], x[3]),      # q_CD 4
-    (G,   x[2], x[4]),      # q_CE 5
-    ((2/3)*G, x[3], x[4]),  # q_DE 6
-    (G,   x[4], p0)         # q_E0 7
+    (G,   p1,  x[0]),       # q_1A 
+    (G,   x[0], x[1]),      # q_AB 
+    (G,   x[0], x[2]),      # q_AC 
+    (G,   x[1], x[3]),      # q_BD 
+    (G,   x[2], x[3]),      # q_CD 
+    (G,   x[2], x[4]),      # q_CE 
+    ((2/3)*G, x[3], x[4]),  # q_DE 
+    (G,   x[4], p0)         # q_E0 
     ]
     q = [g * (i - j) for g, i, j in poisuilles_gildi] #[q_1A, q_AB, q_AC, q_BD, q_CD, q_CE, q_DE, q_E0]
    
