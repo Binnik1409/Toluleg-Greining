@@ -74,3 +74,22 @@ def newtonmult(x0,tol,F,DF):
         s=-la.solve(DF(x),F(x))
         x=x+s
     return(x)
+
+
+def poisuilles(x,G,p1,p0):
+
+    poisuilles_gildi = [
+    (G,   p1,  x[0]),       # q_1A
+    (G,   x[0], x[1]),      # q_AB
+    (G,   x[0], x[2]),      # q_AC
+    (G,   x[1], x[3]),      # q_BD
+    (G,   x[2], x[3]),      # q_CD
+    (G,   x[2], x[4]),      # q_CE
+    ((2/3)*G, x[3], x[4]),  # q_DE
+    (G,   x[4], p0)         # q_E0 
+    ]
+
+    flow = [g * (i - j) for g, i, j in poisuilles_gildi] #[q_1A, q_AB, q_AC, q_BD, q_CD, q_CE, q_DE, q_E0]
+
+    return flow
+
