@@ -1,6 +1,6 @@
 
 import math
-
+import numpy as np
 
 ### Functions ###
 
@@ -88,5 +88,27 @@ def Df(s, m1=1, m2=2, k1=10, k2=5, c1=10, c2=1):
     f0 = c1*k2+c2*k1
     return f3 + f2 + f1 + f0
 
+# Fonction for this differential eq that returns lamda s:
+def lambda_f(m1=1, m2=2, k1=10, k2=5, c1=10, c2=1):
+    coe1 = m1*m2
+    coe2 = c2*(m1+m2*(c1+c2))
+    coe3 = m1*k2+m2*(k1+k2)+c1*c2
+    coe4 = c1*k2+c2*k1
+    coe5 = k1*k2
+    return lambda s:coe1*(s**4) + coe2*(s**3) + coe3*(s**2) + coe4*(s) + coe5
+
+# Fonction for the dirivative of this differential eq that returns lamda s:
+def lambda_Df(m1=1, m2=2, k1=10, k2=5, c1=10, c2=1):
+    coe1 = (m1*m2)*4
+    coe2 = (c2*(m1+m2*(c1+c2)))*3
+    coe3 = (m1*k2+m2*(k1+k2)+c1*c2)*2
+    coe4 = (c1*k2+c2*k1)*1
+    return lambda s:coe1*(s**3) + coe2*(s**2) + coe3*(s) + coe4
+
+# Function for calculating roots with C1 as an input value
+def cfunc(c, tol):
+    p = 1j
+    v = newton(p, tol, lambda_f(c1=c), lambda_Df(c1=c))
+    return np.real(v)
 
 ## Verkefni 2 ##
