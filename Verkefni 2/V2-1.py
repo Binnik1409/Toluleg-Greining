@@ -20,9 +20,9 @@ B = np.matrix(f'{p1};{-Q_b/G}; 0; 0; 0')
 x = la.solve(A,B)
 
 # Reikna flæði í röri milli punkta með poisuilles jöfnunni
-flow = poisuilles(x,G,p1,p0)
+q = poisuilles(x,G,p1,p0)
 
 # Print
 print('q_1A         q_AB         q_AC         q_BD          q_CD        q_CE        q_DE         q_E0')
-r = '  '.join(map(str, flow)).replace("[[","").replace("]]","")
+r = '  '.join(map(str, q)).replace("[[","").replace("]]","")
 print(r)
