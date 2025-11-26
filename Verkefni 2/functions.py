@@ -1,5 +1,6 @@
 import math
-
+import numpy as np
+from numpy import linalg as la
 
 
 def bisection(f,a,b,tol):
@@ -59,3 +60,17 @@ def newton(x0,tol, f, Df, errors = False):
             oldx=x
             x=x-f(x)/Df(x)
         return x
+    
+def newtonmult(x0,tol):
+    '''
+    x0 er vigur i R^n skilgreindur t.d. sem
+    x0=np.array([1,2,3])
+    gert ráð fyrir að F(x) og Jacobi fylki DF(x) séu skilgreind annars staðar
+    '''
+    x=x0
+    oldx=x+2*tol
+    while la.norm(x-oldx,np.inf)>tol:
+        oldx=x
+        s=-la.solve(DF(x),F(x))
+        x=x+s
+    return(x)
