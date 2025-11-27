@@ -3,52 +3,55 @@ import math as m
 from functions import q_E0
 from functions import poisuilles
 
-# Gera posisuilles fallið að falli af p1
-def p1_poisuilles(p1):
+# Gera fall af q_E0 sem skilar P1
+def tralla(q_E0,p_0):
 
-    G = (m.pi*((5*10**(-2))**4))/(8*(1*10**(-3))*100)
-    x = np.array([
-    2982653.95529531,
-    2711991.61935227,
-    2035970.24653365,
-    2156123.62538856,
-    1502551.70272537
-    ])  
-    p0 = 0
-    q = poisuilles(x,G,p1,p0)
-    return q[7]
+    G = (m.pi * ((5e-2)**4)) / (8 * (1e-3) * 100)
 
-def bisection(f,a,b,tol,r_value):
-    '''gert ráð fyrir að búið se að skilgreina f(x) fyrir utan t.d.
-    def f(x):
-        return(x**2-2)
-    '''
-    fa = f(a)
-    fb = f(b)
-    while (b-a)/2>tol:
-        c=(a+b)/2
-        fc=f(c)
-        if fc==r_value:break
-        if abs(fc-r_value) < abs(fb-r_value):
-            b=c
-        else:
-            a=c
-            fa=fc
-    return((a+b)/2)
+    for q in q_E0:
+        
+        P_E = (q/G)+p_0
+        P_D = 
+
+
+
 
 # Skilgreina fasta
-w = 2*np.pi/24
-A = 1.32094476 
-B = 4.01567095 
+w = 2 * np.pi / 24
+A = 1.32094476
+B = 4.01567095
 C = 9.45
 
 # Búa til tíma vigur fyrir 100 tímaeiningar á einum sólahring
-time = [24/100*i for i in range(1,101)]
+time = [24/100 * i for i in range(1, 101)]
 
-list_of_p1 = []
+# Finna q_E0 gildin með jöfnu 18.
+list_of_q_E0 = []
 for t in time:
-    q = q_E0(A,B,C,w,t)
-    p1 = bisection(p1_poisuilles,0,4.2*10**(6),1e-8,q)
-    list_of_p1.append(p1)    
+    q = q_E0(A, B, C, w, t)
+    list_of_q_E0.append(q)
 
+<<<<<<< HEAD
 print(list_of_p1  )
+=======
+
+
+
+def p1_poisuilles(p1):
+
+    G = (m.pi * ((5e-2)**4)) / (8 * (1e-3) * 100)
+
+    x = np.array([
+        2982653.95529531,
+        2711991.61935227,
+        2035970.24653365,
+        2156123.62538856,
+        1502551.70272537
+    ])
+
+    p0 = 0
+    q = poisuilles(x, G, p1, p0)
+
+    # Return q_E0 (last element)
+    return q[-1]
+>>>>>>> f4170b9 (fdsjfkhsgrkd)
