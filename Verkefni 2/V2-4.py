@@ -1,12 +1,6 @@
 import numpy as np
 from numpy import linalg as LA
 
-QB = 7.0
-p0 = 0.0
-p1 = 4.2*10**6
-K  = 1.62*10**8
-eih = (p0 - p1) / K
-
 def F(x):
     q1A, qAB, qAC, qBD, qCD, qCE, qDE, qE0 = x
     Fx = np.zeros(8)
@@ -54,16 +48,27 @@ def DF(x):
 
     return J
 
-def newtonmult(x0, tol):
-    x = x0.copy()
-    oldx = x + 2*tol
-    while LA.norm(x - oldx, np.inf) > tol:
-        oldx = x.copy()
-        s = -LA.solve(DF(x), F(x))
-        x = x + s
-    return x
+def newtonmult(x0,tol):
+    '''x0 er vigur i R^n skilgreindur t.d. sem
+    x0=np.array([1,2,3])
+    gert ráð fyrir að F(x) og Jacobi fylki DF(x) séu skilgreind annars staðar'''
+    x=x0
+    oldx=x+2*tol
+    while LA.norm(x-oldx,np.inf)>tol:
+        oldx=x
+        s=-LA.solve(DF(x),F(x))
+        x=x+s
+    return(x)
 
+QB = 7.0
+p0 = 0.0
+p1 = 4.2*10**6
+K  = 1.62*10**8
+eih = (p0 - p1) / K
+
+x = ["q1A", "qAB", "qAC", "qBD", "qCD", "qCE", "qDE", "qE0"]
 x0 = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
 tol = 1*10**-8
 sol = newtonmult(x0, tol)
-print("solution:", sol)
+for i,j in enumerate(x):
+    print(j,": ", sol[i], sep="")
