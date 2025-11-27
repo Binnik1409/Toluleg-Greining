@@ -109,3 +109,9 @@ def F(q,QB,p0,p1,K):
         ])
     
     return results
+
+def q_E0(A,B,C,w,t):
+
+    q = A*np.cos(w*t) + B*np.sin(w*t) + C
+
+    return q

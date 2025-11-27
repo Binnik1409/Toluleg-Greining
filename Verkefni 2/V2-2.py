@@ -12,7 +12,7 @@ aT = np.transpose(a) #Transpose af A
 aTa = np.dot(aT,a) #Transpose af A margfaldað við A
 aTaI = np.linalg.inv(aTa) #Adnhverfa af margefeldi Transpose A og A
 x = np.dot(np.dot(aTaI, aT), b) #Andhverfan margfaldað við transpose A og b skv. setningu gefur x
-
+print(x)
 
 # plt.plot(t,b,'o')
 # plt.plot(t,[f.qE0(i,x[0,0],x[0,1],x[0,2]) for i in t])
