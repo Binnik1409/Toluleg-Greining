@@ -75,12 +75,6 @@ def newtonmult(x0,tol,F,DF):
         x=x+s
     return(x)
 
-def qE0(t, A, B, C, w=2*np.pi/24):
-    
-    sol = A*np.cos(float(w)*float(t))+B*np.sin(float(w)*float(t))+C
-
-    return sol
-
 def poisuilles(x,G,p1,p0):
 
     poisuilles_gildi = [
@@ -95,22 +89,6 @@ def poisuilles(x,G,p1,p0):
     ]
 
     return [g * (i - j) for g, i, j in poisuilles_gildi] #[q_1A, q_AB, q_AC, q_BD, q_CD, q_CE, q_DE, q_E0]
-
-
-def F(q,QB,p0,p1,K):
-
-    results = np.array([
-        q[0]-q[1]-q[2],
-        QB+q[1]-q[3],
-        q[2]-q[4]-q[5],
-        q[3]+q[4]-q[6],
-        q[5]+q[6]-q[7],
-        q[1]*abs(q[1])-q[2]*abs(q[2])+q[3]*abs(q[3])-q[4]*abs(q[4]),
-        q[4]*abs(q[4])-1/2*q[5]*abs(q[5])+3/2*q[6]*abs(q[6]),
-        (p0-p1)/K+q[0]*abs(q[0])+q[2]*abs(q[2])+1/2*q[5]*abs(q[5])+q[7]*abs(q[7])
-        ])
-    
-    return results
 
 def q_E0(A,B,C,w,t):
 
