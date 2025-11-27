@@ -95,3 +95,37 @@ def q_E0(A,B,C,w,t):
     q = A*np.cos(w*t) + B*np.sin(w*t) + C
 
     return q
+
+def linal_solver(p1, G, Q_b):
+    
+    A = np.matrix('3 -1 -1 0 0; 1 -2 0 1 0; 1 0 -4 1 2; 0 3 3 -8 2; 0 0 6 2 -11')
+    B = np.matrix(f'{p1};{-Q_b/G}; 0; 0; 0')
+
+    # Nota linalg til að leysa fyrir x
+    x = la.solve(A,B)
+    
+    return x
+
+def modifyed_bisection(target_q, G, p0, Q_b, tol=1e-6, max_iter=100):
+
+    # Algorithm bounds
+    low = 0
+    high = 6e6   # þrýstingur í dæmi 1 var 4.2e6, svo þetta dugir
+
+    for _ in range(max_iter):
+        mid = 0.5*(low + high)
+
+        # leysa línulega kerfið fyrir mid gildi
+        x = linal_solver(mid, G, Q_b)
+        q = poisuilles(x, G, mid, p0)[-1]  # q_E0
+
+        if abs(q - target_q) < tol:
+            return mid
+
+        # helmingun
+        if q > target_q:
+            high = mid
+        else:
+            low = mid
+
+    return mid  # ef við náum ekki alveg nákvæmni

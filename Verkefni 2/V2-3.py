@@ -1,57 +1,32 @@
 import numpy as np
 import math as m
 from functions import q_E0
-from functions import poisuilles
+from functions import modifyed_bisection
 
-# Gera fall af q_E0 sem skilar P1
-def tralla(q_E0,p_0):
+v = 1*10**(-3)
+r = 5*10**(-2)
+L = 100
+G = (m.pi*(r**4))/(8*v*L)
+Q_b = 7
+p0 = 0
 
-    G = (m.pi * ((5e-2)**4)) / (8 * (1e-3) * 100)
+A_val = 3.0393347909480844
+B_val = -2.397952502738618
+C_val = 9.09518050541516
 
-    for q in q_E0:
-        
-        P_E = (q/G)+p_0
-        P_D = 
+w = 2*np.pi/24
 
+# 100 tímapunktar
+t_values = np.linspace(0, 24, 100)
 
+p1_values = []
 
+for t in t_values:
+    target_q = q_E0(A_val, B_val, C_val, w, t)
+    p1 = modifyed_bisection(target_q, G, p0, Q_b)
+    p1_values.append(p1)
 
-# Skilgreina fasta
-w = 2 * np.pi / 24
-A = 1.32094476
-B = 4.01567095
-C = 9.45
-
-# Búa til tíma vigur fyrir 100 tímaeiningar á einum sólahring
-time = [24/100 * i for i in range(1, 101)]
-
-# Finna q_E0 gildin með jöfnu 18.
-list_of_q_E0 = []
-for t in time:
-    q = q_E0(A, B, C, w, t)
-    list_of_q_E0.append(q)
-
-<<<<<<< HEAD
-print(list_of_p1  )
-=======
-
-
-
-def p1_poisuilles(p1):
-
-    G = (m.pi * ((5e-2)**4)) / (8 * (1e-3) * 100)
-
-    x = np.array([
-        2982653.95529531,
-        2711991.61935227,
-        2035970.24653365,
-        2156123.62538856,
-        1502551.70272537
-    ])
-
-    p0 = 0
-    q = poisuilles(x, G, p1, p0)
-
-    # Return q_E0 (last element)
-    return q[-1]
->>>>>>> f4170b9 (fdsjfkhsgrkd)
+print('p1 gildi:')
+print('  t       p1 gildi')
+for i in range(len(p1_values)):
+    print(f'{t_values[i]:.2f} h  {p1_values[i]:.3e} Pa')
