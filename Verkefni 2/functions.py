@@ -129,3 +129,25 @@ def modifyed_bisection(target_q, G, p0, Q_b, tol=1e-6, max_iter=100):
             low = mid
 
     return mid  # ef við náum ekki alveg nákvæmni
+
+def darcy_weisback(K,q_ij,p_j):
+    p_i = K*q_ij*abs(q_ij)+p_j
+    return p_i
+
+def compute_pressures(sol, K, p0):
+    # name, multiplier for K, sol_index, parent_name
+    steps = [
+        ("PE", 1.0, -1, "P0"),
+        ("PD", 1.5, -2, "PE"),
+        ("PC", 1.0, 4,  "PD"),
+        ("PB", 1.0, 3,  "PD"),
+        ("PA", 1.0, 1,  "PB"),
+        ("P1", 1.0, 0,  "PA"),
+    ]
+
+    P = {"P0": p0}
+
+    for name, k_mult, sol_idx, parent in steps:
+        P[name] = darcy_weisback(k_mult * K, sol[sol_idx], P[parent])
+
+    return P

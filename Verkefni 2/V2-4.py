@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import linalg as LA
 from functions import newtonmult
+from functions import compute_pressures
 
 def F(x):
     q1A, qAB, qAC, qBD, qCD, qCE, qDE, qE0 = x
@@ -61,3 +62,8 @@ tol = 1*10**-8
 sol = newtonmult(x0, tol, F, DF)
 for i,j in enumerate(x):
     print(j,": ", sol[i], sep="")
+
+#pressure
+P = compute_pressures(sol, K, p0)
+for name in ["P1","PA","PB","PC","PD","PE","P0"]:
+    print(f"{name}: {P[name]}")
