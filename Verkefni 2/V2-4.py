@@ -65,10 +65,10 @@ vector = [
 ]
 
 x0 = [1,1,2,3,4,3,2,1]
-Vector(vector).print_vector()
-print()
-Vector(vector).print_jacobian()
-print()
+# Vector(vector).print_vector()
+# print()
+# Vector(vector).print_jacobian()
+# print()
 
 tol = 10**(-8)
 nakv = int(np.ceil(-np.log10(tol)+2))
