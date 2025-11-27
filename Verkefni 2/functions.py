@@ -83,7 +83,7 @@ def poisuilles(x,G,p1,p0):
     (G,   x[0], x[2]),      # q_AC 
     (G,   x[1], x[3]),      # q_BD 
     (G,   x[2], x[3]),      # q_CD 
-    (G,   x[2], x[4]),      # q_CE 
+    ((2)*G,   x[2], x[4]),  # q_CE 
     ((2/3)*G, x[3], x[4]),  # q_DE 
     (G,   x[4], p0)         # q_E0 
     ]
