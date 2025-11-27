@@ -74,25 +74,45 @@ def newtonmult(x0,tol,F,DF):
         s=-la.solve(DF(x),F(x))
         x=x+s
     return(x)
-    
-def qE0(t, A, B, C, w=2*np.pi/24):
-    return(A*np.cos(float(w)*float(t))+B*np.sin(float(w)*float(t))+C)
 
+def qE0(t, A, B, C, w=2*np.pi/24):
+    sol = A*np.cos(float(w)*float(t))+B*np.sin(float(w)*float(t))+C
+    return sol
 
 def poisuilles(x,G,p1,p0):
 
     poisuilles_gildi = [
-    (G,   p1,  x[0]),       # q_1A
-    (G,   x[0], x[1]),      # q_AB
-    (G,   x[0], x[2]),      # q_AC
-    (G,   x[1], x[3]),      # q_BD
-    (G,   x[2], x[3]),      # q_CD
-    (G,   x[2], x[4]),      # q_CE
-    ((2/3)*G, x[3], x[4]),  # q_DE
+    (G,   p1,  x[0]),       # q_1A 
+    (G,   x[0], x[1]),      # q_AB 
+    (G,   x[0], x[2]),      # q_AC 
+    (G,   x[1], x[3]),      # q_BD 
+    (G,   x[2], x[3]),      # q_CD 
+    (G,   x[2], x[4]),      # q_CE 
+    ((2/3)*G, x[3], x[4]),  # q_DE 
     (G,   x[4], p0)         # q_E0 
     ]
+    q = [g * (i - j) for g, i, j in poisuilles_gildi] #[q_1A, q_AB, q_AC, q_BD, q_CD, q_CE, q_DE, q_E0]
+   
+    return q
 
-    flow = [g * (i - j) for g, i, j in poisuilles_gildi] #[q_1A, q_AB, q_AC, q_BD, q_CD, q_CE, q_DE, q_E0]
 
-    return flow
+def F(q,QB,p0,p1,K):
 
+    results = np.array([
+        q[0]-q[1]-q[2],
+        QB+q[1]-q[3],
+        q[2]-q[4]-q[5],
+        q[3]+q[4]-q[6],
+        q[5]+q[6]-q[7],
+        q[1]*abs(q[1])-q[2]*abs(q[2])+q[3]*abs(q[3])-q[4]*abs(q[4]),
+        q[4]*abs(q[4])-1/2*q[5]*abs(q[5])+3/2*q[6]*abs(q[6]),
+        (p0-p1)/K+q[0]*abs(q[0])+q[2]*abs(q[2])+1/2*q[5]*abs(q[5])+q[7]*abs(q[7])
+        ])
+    
+    return results
+
+def q_E0(A,B,C,w,t):
+
+    q = A*np.cos(w*t) + B*np.sin(w*t) + C
+
+    return q
