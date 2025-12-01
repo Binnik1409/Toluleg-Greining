@@ -17,7 +17,6 @@ print("A:", x[0,0])
 print("B:", x[0,1])
 print("C:", x[0,2])
 
-
 # plt.plot(t,b,'o')
 # plt.plot(t,[f.qE0(i,x[0,0],x[0,1],x[0,2]) for i in t])
 # plt.show() #It's beautiful
