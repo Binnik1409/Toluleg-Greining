@@ -1,7 +1,19 @@
+import math as m
+
 def eulerstep(t, x, h):
-    return x+h*ydot(t,x)
+    return [j+h*i for j,i in zip(x,ydot(t,x))]
+
 def ydot(t, x):
     g, L = 9.81, 2
-    return [x2, -(g/L)*sin(x1)]
+    x_ = x[1]
+    y_ = -(g/L)*m.sin(x[0])
+    return [x_, y_]
 
-h = 0.01
+n = 100
+t = 2
+h = t/n
+x = [20, 2]
+
+for i in range(n):
+    x = eulerstep(t, x, h)
+    print(x)
