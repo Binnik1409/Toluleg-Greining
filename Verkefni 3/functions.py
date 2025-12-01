@@ -1,0 +1,16 @@
+import numpy as np
+
+def RKsolverLotkaVolterra(y0, T, n, f):
+
+    y = np.zeros((n+1, len(y0)))
+    y[0] = np.array(y0)
+    h = T / n
+
+    for i in range(n):
+        k1 = f(y[i])
+        k2 = f(y[i] + 0.5 * h * k1)
+        k3 = f(y[i] + 0.5 * h * k2)
+        k4 = f(y[i] + h * k3)
+        y[i+1] = y[i] + (h / 6) * (k1 + 2*k2 + 2*k3 + k4)
+
+    return y
