@@ -1,5 +1,7 @@
 import numpy as np
 from numpy import linalg as LA
+from functions import newtonmult
+from functions import compute_pressures
 
 def F(x):
     q1A, qAB, qAC, qBD, qCD, qCE, qDE, qE0 = x
@@ -48,27 +50,20 @@ def DF(x):
 
     return J
 
-def newtonmult(x0,tol):
-    '''x0 er vigur i R^n skilgreindur t.d. sem
-    x0=np.array([1,2,3])
-    gert ráð fyrir að F(x) og Jacobi fylki DF(x) séu skilgreind annars staðar'''
-    x=x0
-    oldx=x+2*tol
-    while LA.norm(x-oldx,np.inf)>tol:
-        oldx=x
-        s=-LA.solve(DF(x),F(x))
-        x=x+s
-    return(x)
-
 QB = 7.0
 p0 = 0.0
 p1 = 4.2*10**6
-K  = 1.62*10**8
+K  = 1.617897*10**8
 eih = (p0 - p1) / K
 
 x = ["q1A", "qAB", "qAC", "qBD", "qCD", "qCE", "qDE", "qE0"]
 x0 = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
 tol = 1*10**-8
-sol = newtonmult(x0, tol)
+sol = newtonmult(x0, tol, F, DF)
 for i,j in enumerate(x):
     print(j,": ", sol[i], sep="")
+
+#pressure
+P = compute_pressures(sol, K, p0)
+for name in ["P1","PA","PB","PC","PD","PE","P0"]:
+    print(f"{name}: {P[name]}")

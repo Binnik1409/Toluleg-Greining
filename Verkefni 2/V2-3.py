@@ -1,54 +1,33 @@
 import numpy as np
 import math as m
 from functions import q_E0
-from functions import poisuilles
+from functions import modifyed_bisection
 
-# Gera posisuilles fallið að falli af p1
-def p1_poisuilles(p1):
+v = 1*10**(-3)
+r = 5*10**(-2)
+L = 100
+G = (m.pi*(r**4))/(8*v*L)
+Q_b = 7
+p0 = 0
 
-    G = (m.pi*((5*10**(-2))**4))/(8*(1*10**(-3))*100)
-    x = np.array([
-    2982653.95529531,
-    2711991.61935227,
-    2035970.24653365,
-    2156123.62538856,
-    1502551.70272537
-    ])  
-    p0 = 0
-    q = poisuilles(x,G,p1,p0)
-    return q[7]
+A_val = 1.3209447623073862
+B_val = 4.015670949654589
+C_val = 9.45
 
-def bisection(f,a,b,tol,r_value):
-    '''gert ráð fyrir að búið se að skilgreina f(x) fyrir utan t.d.
-    def f(x):
-        return(x**2-2)
-    '''
-    fa = f(a)
-    fb = f(b)
-    while (b-a)/2>tol:
-        c=(a+b)/2
-        fc=f(c)
-        if fc==r_value:break
-        if abs(fc-r_value) < abs(fb-r_value):
-            b=c
-        else:
-            a=c
-            fa=fc
-    return((a+b)/2)
 
-# Skilgreina fasta
 w = 2*np.pi/24
-A = 1.32094476 
-B = 4.01567095 
-C = 9.45
 
-# Búa til tíma vigur fyrir 100 tímaeiningar á einum sólahring
-time = [24/100*i for i in range(1,101)]
+# 100 tímapunktar
+t_values = np.linspace(0, 24, 100)
 
-list_of_p1 = []
-for t in time:
-    q = q_E0(A,B,C,w,t)
-    p1 = bisection(p1_poisuilles,0,4.2*10**(6),1e-8,q)
-    list_of_p1.append(p1)    
+p1_values = []
 
-print(list_of_p1  )
+for t in t_values:
+    target_q = q_E0(A_val, B_val, C_val, w, t)
+    p1 = modifyed_bisection(target_q, G, p0, Q_b)
+    p1_values.append(p1)
+
+print('p1 gildi:')
+print('  t       p1 gildi')
+for i in range(len(p1_values)):
+    print(f'{t_values[i]:.2f} h  {p1_values[i]:.3e} Pa')

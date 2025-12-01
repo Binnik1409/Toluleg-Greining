@@ -75,10 +75,6 @@ def newtonmult(x0,tol,F,DF):
         x=x+s
     return(x)
 
-def qE0(t, A, B, C, w=2*np.pi/24):
-    sol = A*np.cos(float(w)*float(t))+B*np.sin(float(w)*float(t))+C
-    return sol
-
 def poisuilles(x,G,p1,p0):
 
     poisuilles_gildi = [
@@ -87,32 +83,71 @@ def poisuilles(x,G,p1,p0):
     (G,   x[0], x[2]),      # q_AC 
     (G,   x[1], x[3]),      # q_BD 
     (G,   x[2], x[3]),      # q_CD 
-    (G,   x[2], x[4]),      # q_CE 
+    ((2)*G,   x[2], x[4]),  # q_CE 
     ((2/3)*G, x[3], x[4]),  # q_DE 
     (G,   x[4], p0)         # q_E0 
     ]
-    q = [g * (i - j) for g, i, j in poisuilles_gildi] #[q_1A, q_AB, q_AC, q_BD, q_CD, q_CE, q_DE, q_E0]
-   
-    return q
 
-
-def F(q,QB,p0,p1,K):
-
-    results = np.array([
-        q[0]-q[1]-q[2],
-        QB+q[1]-q[3],
-        q[2]-q[4]-q[5],
-        q[3]+q[4]-q[6],
-        q[5]+q[6]-q[7],
-        q[1]*abs(q[1])-q[2]*abs(q[2])+q[3]*abs(q[3])-q[4]*abs(q[4]),
-        q[4]*abs(q[4])-1/2*q[5]*abs(q[5])+3/2*q[6]*abs(q[6]),
-        (p0-p1)/K+q[0]*abs(q[0])+q[2]*abs(q[2])+1/2*q[5]*abs(q[5])+q[7]*abs(q[7])
-        ])
-    
-    return results
+    return [g * (i - j) for g, i, j in poisuilles_gildi] #[q_1A, q_AB, q_AC, q_BD, q_CD, q_CE, q_DE, q_E0]
 
 def q_E0(A,B,C,w,t):
 
     q = A*np.cos(w*t) + B*np.sin(w*t) + C
 
     return q
+
+def linal_solver(p1, G, Q_b):
+    
+    A = np.matrix('3 -1 -1 0 0; 1 -2 0 1 0; 1 0 -4 1 2; 0 3 3 -8 2; 0 0 6 2 -11')
+    B = np.matrix(f'{p1};{-Q_b/G}; 0; 0; 0')
+
+    # Nota linalg til að leysa fyrir x
+    x = la.solve(A,B)
+    
+    return x
+
+def modifyed_bisection(target_q, G, p0, Q_b, tol=1e-6, max_iter=100):
+
+    # Algorithm bounds
+    low = 0
+    high = 6e6   # þrýstingur í dæmi 1 var 4.2e6, svo þetta dugir
+
+    for _ in range(max_iter):
+        mid = 0.5*(low + high)
+
+        # leysa línulega kerfið fyrir mid gildi
+        x = linal_solver(mid, G, Q_b)
+        q = poisuilles(x, G, mid, p0)[-1]  # q_E0
+
+        if abs(q - target_q) < tol:
+            return mid
+
+        # helmingun
+        if q > target_q:
+            high = mid
+        else:
+            low = mid
+
+    return mid  # ef við náum ekki alveg nákvæmni
+
+def darcy_weisback(K,q_ij,p_j):
+    p_i = K*q_ij*abs(q_ij)+p_j
+    return p_i
+
+def compute_pressures(sol, K, p0):
+    # name, multiplier for K, sol_index, parent_name
+    steps = [
+        ("PE", 1.0, -1, "P0"),
+        ("PD", 1.5, -2, "PE"),
+        ("PC", 1.0, 4,  "PD"),
+        ("PB", 1.0, 3,  "PD"),
+        ("PA", 1.0, 1,  "PB"),
+        ("P1", 1.0, 0,  "PA"),
+    ]
+
+    P = {"P0": p0}
+
+    for name, k_mult, sol_idx, parent in steps:
+        P[name] = darcy_weisback(k_mult * K, sol[sol_idx], P[parent])
+
+    return P
