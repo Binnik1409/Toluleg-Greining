@@ -10,9 +10,9 @@ def ydot(t, x):
     return [x_, y_]
 
 n = 100
-T = 2
+T = 3
 h = T/n
-x = [m.radians(20), 2]
+x = [m.radians(20), 0]
 
 t = 0
 for i in range(n):
