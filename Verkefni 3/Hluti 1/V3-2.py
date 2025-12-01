@@ -9,10 +9,10 @@ def ydot(t, x):
     y_ = -(g/L)*m.sin(x[0])
     return [x_, y_]
 
-n = 10
-t = 1
+n = 100
+t = 2
 h = t/n
-x = [20, 0]
+x = [20, 2]
 
 for i in range(n):
     x = eulerstep(t, x, h)
