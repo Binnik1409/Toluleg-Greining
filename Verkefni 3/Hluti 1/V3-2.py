@@ -10,10 +10,12 @@ def ydot(t, x):
     return [x_, y_]
 
 n = 100
-t = 2
-h = t/n
-x = [20, 2]
+T = 3
+h = T/n
+x = [m.radians(20), 0]
 
+t = 0
 for i in range(n):
     x = eulerstep(t, x, h)
-    print(x)
+    t += h
+    print(m.degrees(x[0]), x[1])

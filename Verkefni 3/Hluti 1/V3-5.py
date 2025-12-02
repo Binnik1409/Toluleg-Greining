@@ -18,6 +18,3 @@ solution_1 = RKsolverLotkaVolterra(y0, T, n, f)
 
 y0 = [m.pi/2, 0]
 solution_2 = RKsolverLotkaVolterra(y0, T, n, f)
-
-print(solution_2)
-print()
