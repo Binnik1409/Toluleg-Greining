@@ -12,10 +12,9 @@ T = 20
 n = 500
 L=2
 
-theta, omega = f.euler(theta0, omega0,T,n,L)
+theta, omega = f.euler(y0,T,n)
 #End of my code
 
-sol = euler(y0,T,n)
 
 # figure
 plt.close("all")

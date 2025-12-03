@@ -24,10 +24,9 @@ def ydot(yi, L=2, g=9.81):
 def eulerstep(yi, h, func, L=2, g=9.81):
     return [x + h*func(yi,L,g)[i] for i,x in enumerate(yi)]
 
-def euler(theta0, omega0, T, n, L=2, g=9.81):
-
-    y = [[theta0, omega0]]
+def euler(y0, T, n, L=2, g=9.81):
     h = T/n
+    y = [y0]
 
     for i in range(n-1):
         y.append(eulerstep(y[i], h, ydot, L, g))
