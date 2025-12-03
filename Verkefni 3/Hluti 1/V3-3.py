@@ -2,13 +2,14 @@ import numpy as np
 import math as m
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from functions import vtk
 
 # Fastar
-y_0 = [m.pi/12, 0]
+y0 = [m.pi/12, 0]
 T = 20
 n = 500
 
-
+sol = vtk(y0,T,n)
 
 # figure
 plt.close("all")
