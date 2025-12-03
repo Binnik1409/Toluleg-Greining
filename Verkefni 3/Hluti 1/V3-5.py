@@ -37,16 +37,13 @@ for i,sol in enumerate([solution_1,solution_2]):
     # layout to tight
     fig.tight_layout()
 
-    # Ein lota
-    T = 2.0*np.pi
-
     FPS = 30 # Fjöldi ramma á sek í hreyfimyndinni.
     # Til að hægja á hreyfimyndinni er hægt að auka FPS og halda FPS_PLAY föstu.
     FPS_PLAY = 30 # Fjöldi ramma á sek þegar við spilum hreyfimyndinna.
     # Best að hafa það 30.
 
     t_start = 0.0 # Byrjunar tími í sek
-    t_end = 2*T # Enda tími í sek (Tvær lotur)
+    t_end = 2*2*np.pi # Enda tími í sek (Tvær lotur)
 
     # Reikna út fjölda ramma sem þarf og stærð eins tíma skrefs.
     n = int(np.ceil(FPS*(t_end - t_start)))
@@ -78,7 +75,7 @@ for i,sol in enumerate([solution_1,solution_2]):
 
     # Sýna plot gluggann
     plt.show()
-    
+
     # Búa til skránna
     Writer = animation.writers['ffmpeg']
     writer = Writer(fps=FPS_PLAY, metadata=dict(artist='Me'), bitrate=1800)

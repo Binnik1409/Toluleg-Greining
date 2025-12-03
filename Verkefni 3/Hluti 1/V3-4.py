@@ -2,13 +2,14 @@ import numpy as np
 import math as m
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from functions import euler
 
 # Fastar
-theta_0 = m.pi/2
-theta_df_0 = 0
+y0 = [m.pi/2, 0]
 T = 20
 n = 500
 
+sol = euler(y0,T,n)
 
 # figure
 plt.close("all")
@@ -25,16 +26,13 @@ plt.ylabel('y [eining]')
 # layout to tight
 fig.tight_layout()
 
-# Ein lota
-T = 2.0*np.pi
-
 FPS = 30 # Fjöldi ramma á sek í hreyfimyndinni.
 # Til að hægja á hreyfimyndinni er hægt að auka FPS og halda FPS_PLAY föstu.
 FPS_PLAY = 30 # Fjöldi ramma á sek þegar við spilum hreyfimyndinna.
 # Best að hafa það 30.
 
 t_start = 0.0 # Byrjunar tími í sek
-t_end = 2*T # Enda tími í sek (Tvær lotur)
+t_end = 2*2*np.pi # Enda tími í sek (Tvær lotur)
 
 # Reikna út fjölda ramma sem þarf og stærð eins tíma skrefs.
 n = int(np.ceil(FPS*(t_end - t_start)))
