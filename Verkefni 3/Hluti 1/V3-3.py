@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 # Fastar
-theta_0 = m.pi/12
-theta_df_0 = 0
+y_0 = [m.pi/12, 0]
 T = 20
 n = 500
+
 
 
 # figure

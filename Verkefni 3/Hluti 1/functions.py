@@ -17,4 +17,25 @@ def RKsolverLotkaVolterra(y0, T, n, f):
     return y
 
 
+def ydot(yi, g=9.81, L=2):
+    return [yi[1], (-g/L)*m.sin(yi[0])]
 
+def eulerstep(yi, h, func):
+    return [x + h*func(yi)[i] for i,x in enumerate(yi)]
+
+def vtk(y0,T,n):
+
+    y = [y0]
+    h = T/n
+
+    for i in range(n-1):
+        y.append(eulerstep(y[i], h, ydot))
+
+    theta = []
+    omega = []
+
+    for x in y:
+        theta.append(x[0])
+        omega.append(x[1])
+
+    return 
