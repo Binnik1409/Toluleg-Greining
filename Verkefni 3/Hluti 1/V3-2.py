@@ -1,4 +1,4 @@
-import numpy as np
+#import numpy as np
 import math as m
 import matplotlib.pyplot as plt
 
@@ -27,7 +27,7 @@ for x in y:
     theta.append(x[0])
     omega.append(x[1])
 
-x = np.linspace(0, T, n)
+#x = np.linspace(0, T, n)
 
-plt.plot(x, theta)
-plt.show()
+#plt.plot(x, theta)
+#plt.show()
