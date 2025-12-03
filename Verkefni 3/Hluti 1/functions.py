@@ -1,4 +1,5 @@
 import numpy as np
+import math as m
 
 def RKsolverLotkaVolterra(y0, T, n, f):
 
@@ -17,19 +18,19 @@ def RKsolverLotkaVolterra(y0, T, n, f):
     return y
 
 
-def ydot(yi, g=9.81, L=2):
+def ydot(yi, L=2, g=9.81):
     return [yi[1], (-g/L)*m.sin(yi[0])]
 
-def eulerstep(yi, h, func):
-    return [x + h*func(yi)[i] for i,x in enumerate(yi)]
+def eulerstep(yi, h, func, L=2, g=9.81):
+    return [x + h*func(yi,L,g)[i] for i,x in enumerate(yi)]
 
-def vtk(y0,T,n):
+def euler(theta0, omega0, T, n, L=2, g=9.81):
 
-    y = [y0]
+    y = [[theta0, omega0]]
     h = T/n
 
     for i in range(n-1):
-        y.append(eulerstep(y[i], h, ydot))
+        y.append(eulerstep(y[i], h, ydot, L, g))
 
     theta = []
     omega = []
@@ -38,4 +39,4 @@ def vtk(y0,T,n):
         theta.append(x[0])
         omega.append(x[1])
 
-    return 
+    return theta, omega

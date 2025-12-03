@@ -2,11 +2,18 @@ import numpy as np
 import math as m
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import functions as f
+import os
 
+#my code
 # Fastar
-y_0 = [m.pi/12, 0]
-T = 20
+theta0, omega0 = m.pi/12, 0
+T = 30
 n = 500
+L=2
+
+theta, omega = f.euler(theta0, omega0,T,n,L)
+#End of my code
 
 
 
@@ -17,10 +24,9 @@ fig = plt.figure()
 # subplot
 # Stilla ása
 pad = 0
-ax1 = fig.add_subplot(111, autoscale_on=False, xlim=(0.0-pad, 15.0+pad), ylim=(-10-
-pad, 10+pad))
-plt.xlabel('x [eining]')
-plt.ylabel('y [eining]')
+ax1 = fig.add_subplot(111, autoscale_on=False, xlim=(-2.5-pad, 2.5+pad), ylim=(-2.5-pad, 2.5+pad), aspect='equal')
+plt.xlabel('Lengdareining')
+plt.ylabel('Lengdareining')
 
 # layout to tight
 fig.tight_layout()
@@ -40,9 +46,19 @@ t_end = 2*T # Enda tími í sek (Tvær lotur)
 n = int(np.ceil(FPS*(t_end - t_start)))
 dt = (t_end - t_start)/n
 
+#My code
+x = [m.sin(i)*L for i in theta]
+y = [-m.cos(i)*L for i in theta]
+#End of my code
+
+
 # Gögn
-line_1, = ax1.plot(sol[0,:], sol[1,:], 'b-', ms=6) # x og y
+line_1, = ax1.plot([], [], 'b-', ms=6) # x og y
 t = np.zeros(n) # Tími
+
+circle = ax1.add_patch(
+    plt.Circle([-1000, -1000], 0.1, fc="r", zorder=3)
+)
 
 # Init function
 def init():
@@ -53,19 +69,24 @@ def init():
 def animate(i):
 
     # Reikna tímann
-    t[i] = t_start + i*dt
-    # y gildi
-    y = np.sin(t[0:i])
-    line_1.set_data(t[0:i], y)
-    return line_1, # Passa að komman þarf að vera
+   
+    line_1.set_data([0, x[i]], [0, y[i]])
+    circle.center = (x[i], y[i])
+    return line_1, circle # Passa að komman þarf að vera
 
-anim = animation.FuncAnimation(fig, animate, frames=n, interval=1, blit=True,
-repeat=False, init_func=init)
+anim = animation.FuncAnimation(
+    fig, animate, frames=len(theta), interval=1000/FPS_PLAY,
+    blit=True, init_func=init, repeat=False
+)
+
 
 # Sýna plot gluggann
 plt.show()
 
 # Búa til skránna
-Writer = animation.writers['ffmpeg']
-writer = Writer(fps=FPS_PLAY, metadata=dict(artist='Me'), bitrate=1800)
-anim.save('vid.mp4', writer=writer)
+make = input("Make video file? (Y/N)")
+if make.lower() == "y":
+    Writer = animation.writers['ffmpeg']
+    writer = Writer(fps=FPS_PLAY, metadata=dict(artist='Me'), bitrate=1800)
+    anim.save('./vid.mp4', writer=writer)
+    print("Saved to: " + os.path.abspath('./vid.mp4'))
