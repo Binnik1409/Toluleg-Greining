@@ -1,27 +1,34 @@
+import numpy as np
 import math as m
 import matplotlib.pyplot as plt
-import numpy as np
 
-def eulerstep(t, x, h):
-    return [j+h*i for j,i in zip(x,ydot(t,x))]
-
-def ydot(t, x):
+def ydot(yi):
     g, L = 9.81, 2
-    x_ = x[1]
-    y_ = -(g/L)*m.sin(x[0])
-    return [x_, y_]
+    return [yi[1], (-g/L)*m.sin(yi[0])]
 
+def eulerstep(yi, h, func):
+    return [x + h*func(yi)[i] for i,x in enumerate(yi)]
+
+
+
+y0 = [1, 1] #!!!!!!!!!!!!!!!!
+
+y = [y0]
 n = 100
 T = 3
 h = T/n
-#x = [m.radians(20), 0]
-x = [1, 1]
 
-t = 0
 for i in range(n):
-    x = eulerstep(t, x, h)
-    t += h
-    print(m.degrees(x[0]), x[1])
+    y.append(eulerstep(y[i], h, ydot))
 
-plt.plot(np.linspace(0, T, n), [m.degrees(x[0]) for i in range(n)])
+theta = []
+omega = []
+
+for x in y:
+    theta.append(x[0])
+    omega.append(x[1])
+
+x = np.linspace(0, T, n+1)
+
+plt.plot(x, theta)
 plt.show()
