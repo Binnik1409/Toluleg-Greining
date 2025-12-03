@@ -2,8 +2,7 @@ import numpy as np
 import math as m
 import matplotlib.pyplot as plt
 
-def ydot(yi):
-    g, L = 9.81, 2
+def ydot(yi, g=9.81, L=2):
     return [yi[1], (-g/L)*m.sin(yi[0])]
 
 def eulerstep(yi, h, func):
