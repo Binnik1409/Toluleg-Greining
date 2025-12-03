@@ -2,7 +2,7 @@ import math as m
 import numpy as np
 
 def eulerstep(y, h, f):
-    return [y[0]+y[1]*h, f(y[0])]
+    return [y[0]+y[1]*h, f(y)]
 
 def ydot(y):
     g, L = 9.81, 2
@@ -25,3 +25,6 @@ for i in range(n):
     y[:,i+1] = eulerstep(y[:,i], h, ydot)
 
 np.plot([i for i in n], y[0])
+
+
+
