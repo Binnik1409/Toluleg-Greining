@@ -24,7 +24,7 @@ def ydot(yi, g=9.81, L=2):
 def eulerstep(yi, h, func):
     return [x + h*func(yi)[i] for i,x in enumerate(yi)]
 
-def vtk(y0,T,n):
+def euler(y0,T,n):
 
     y = [y0]
     h = T/n
