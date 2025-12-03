@@ -17,7 +17,7 @@ n = 100
 T = 3
 h = T/n
 
-for i in range(n):
+for i in range(n-1):
     y.append(eulerstep(y[i], h, ydot))
 
 theta = []
@@ -27,7 +27,7 @@ for x in y:
     theta.append(x[0])
     omega.append(x[1])
 
-x = np.linspace(0, T, n+1)
+x = np.linspace(0, T, n)
 
 plt.plot(x, theta)
 plt.show()
