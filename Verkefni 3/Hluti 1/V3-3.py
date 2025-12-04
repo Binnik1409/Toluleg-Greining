@@ -3,6 +3,7 @@ import math as m
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import functions as f
+import os
 
 #my code
 # Fastar
@@ -11,7 +12,7 @@ T = 20
 n = 500
 L=2
 
-x,y = f.x_y_hnit(y0,T,n,L)
+theta, omega = f.euler(y0,T,n)
 #End of my code
 
 
@@ -48,7 +49,7 @@ y = [-m.cos(i)*L for i in theta]
 
 
 # Gögn
-line_1, = ax1.plot(x, y, 'b-', ms=6) # x og y
+line_1, = ax1.plot([], [], 'b-', ms=6) # x og y
 t = np.zeros(n) # Tími
 
 circle = ax1.add_patch(
