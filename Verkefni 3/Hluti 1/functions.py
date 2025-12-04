@@ -39,3 +39,12 @@ def euler(y0, T, n, L=2, g=9.81):
         omega.append(x[1])
 
     return theta, omega
+
+def x_y_hnit(y0,T,n,L):
+    theta, omega = euler(y0,T,n)
+    x = []
+    y = [] 
+    for angle in theta:
+        x.append(m.sin(angle)/L)
+        y.append(m.cos(angle)/L)
+    return x, y
