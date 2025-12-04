@@ -10,7 +10,7 @@ def f(y):
     g, L = 9.81, 2
     d_theta = omega
     d_omega = -(g/L)*m.sin(theta)
-    return np.array([d_theta, d_omega])
+    return np.array([d_theta,d_omega])
 
 
 T = 20
@@ -18,18 +18,30 @@ n = 500
 L = 2
 
 y0 = [m.pi/12, 0]
-theta_1, omega_1 = RKsolverLotkaVolterra(y0, T, n, f)
+sol_1= RKsolverLotkaVolterra(y0, T, n, f)
+theta_1 = []
+for sol in sol_1:
+    theta_1.append(sol[0])
+
 x_1 = [m.sin(i)*L for i in theta_1]
 y_1 = [-m.cos(i)*L for i in theta_1]
 
 y0 = [m.pi/2, 0]
-theta_2, omega_2 = RKsolverLotkaVolterra(y0, T, n, f)
+sol_2= RKsolverLotkaVolterra(y0, T, n, f)
+theta_2 = []
+for sol in sol_2:
+    theta_2.append(sol[0])
+
 x_2 = [m.sin(i)*L for i in theta_2]
 y_2 = [-m.cos(i)*L for i in theta_2]
 
 theta = [theta_1,theta_2]
+x_y = [[x_1,y_1],[x_2,y_2]]
 
-for i,x,y in enumerate((x_1,y_1),(x_2,y_2)):
+for i,hnit in enumerate(x_y):
+
+    x,y = hnit[0],hnit[1]
+
     # figure
     plt.close("all")
     fig = plt.figure(i+1)
