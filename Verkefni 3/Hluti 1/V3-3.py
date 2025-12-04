@@ -11,7 +11,7 @@ T = 20
 n = 500
 L=2
 
-x,y = f.x_y_hnit()
+x,y = f.x_y_hnit(y0,T,n,L)
 #End of my code
 
 
