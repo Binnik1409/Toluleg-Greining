@@ -49,7 +49,7 @@ y = [-m.cos(i)*L for i in theta]
 
 
 # Gögn
-line_1, = ax1.plot([], [], 'b-', ms=6) # x og y
+line_1, = ax1.plot(x, y, 'b-', ms=6) # x og y
 t = np.zeros(n) # Tími
 
 circle = ax1.add_patch(

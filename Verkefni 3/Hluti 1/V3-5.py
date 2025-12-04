@@ -1,27 +1,35 @@
 import math as m
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from functions import RKsolverLotkaVolterra
 
 def f(y):
-    x, z = y
+    theta, omega = y
     g, L = 9.81, 2
-    dxdt = z
-    dzdt = -(g/L)*m.sin(x)
-    return np.array([dxdt, dzdt])
+    d_theta = omega
+    d_omega = -(g/L)*m.sin(theta)
+    return np.array([d_theta, d_omega])
 
 
 T = 20
 n = 500
+L = 2
 
 y0 = [m.pi/12, 0]
-solution_1 = RKsolverLotkaVolterra(y0, T, n, f)
+theta_1, omega_1 = RKsolverLotkaVolterra(y0, T, n, f)
+x_1 = [m.sin(i)*L for i in theta_1]
+y_1 = [-m.cos(i)*L for i in theta_1]
 
 y0 = [m.pi/2, 0]
-solution_2 = RKsolverLotkaVolterra(y0, T, n, f)
+theta_2, omega_2 = RKsolverLotkaVolterra(y0, T, n, f)
+x_2 = [m.sin(i)*L for i in theta_2]
+y_2 = [-m.cos(i)*L for i in theta_2]
 
-for i,sol in enumerate([solution_1,solution_2]):
+theta = [theta_1,theta_2]
+
+for i,x,y in enumerate((x_1,y_1),(x_2,y_2)):
     # figure
     plt.close("all")
     fig = plt.figure(i+1)
@@ -52,8 +60,12 @@ for i,sol in enumerate([solution_1,solution_2]):
 
 
     # Gögn
-    line_1, = ax1.plot(sol[0,:], sol[1,:], 'b-', ms=6) # x og y
+    line_1, = ax1.plot(x, y, 'b-', ms=6) # x og y
     t = np.zeros(n) # Tími
+
+    circle = ax1.add_patch(
+        plt.Circle([-1000, -1000], 0.1, fc="r", zorder=3)
+    )
 
     # Init function
     def init():
@@ -64,19 +76,24 @@ for i,sol in enumerate([solution_1,solution_2]):
     def animate(i):
 
         # Reikna tímann
-        t[i] = t_start + i*dt
-        # y gildi
-        y = np.sin(t[0:i])
-        line_1.set_data(t[0:i], y)
-        return line_1, # Passa að komman þarf að vera
+    
+        line_1.set_data([0, x[i]], [0, y[i]])
+        circle.center = (x[i], y[i])
+        return line_1, circle # Passa að komman þarf að vera
 
-    anim = animation.FuncAnimation(fig, animate, frames=n, interval=1, blit=True,
-    repeat=False, init_func=init)
+    anim = animation.FuncAnimation(
+        fig, animate, frames=len(theta[i]), interval=1000/FPS_PLAY,
+        blit=True, init_func=init, repeat=False
+    )
+
 
     # Sýna plot gluggann
     plt.show()
 
     # Búa til skránna
-    Writer = animation.writers['ffmpeg']
-    writer = Writer(fps=FPS_PLAY, metadata=dict(artist='Me'), bitrate=1800)
-    anim.save(f'{i+1}vid.mp4', writer=writer)
+    make = input("Make video file? (Y/N)")
+    if make.lower() == "y":
+        Writer = animation.writers['ffmpeg']
+        writer = Writer(fps=FPS_PLAY, metadata=dict(artist='Me'), bitrate=1800)
+        anim.save('./vid.mp4', writer=writer)
+        print("Saved to: " + os.path.abspath('./vid.mp4'))
