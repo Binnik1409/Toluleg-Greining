@@ -14,14 +14,15 @@ def ydot(t, x):
 n = 100
 T = 3
 h = T/n
-#x = [m.radians(20), 0]
-x = [1, 1]
+x = [m.radians(20), 0]
+xlist = []
 
 t = 0
 for i in range(n):
     x = eulerstep(t, x, h)
     t += h
     print(m.degrees(x[0]), x[1])
+    xlist.append(x[0])
 
-plt.plot(np.linspace(0, T, n), [m.degrees(x[0]) for i in range(n)])
+plt.plot(np.linspace(0, T, n), xlist)
 plt.show()

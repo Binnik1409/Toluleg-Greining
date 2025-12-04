@@ -7,7 +7,7 @@ import os
 
 #my code
 # Fastar
-y0 = [m.pi/12, 0]
+y0 = [m.pi/2, 0]
 T = 20
 n = 500
 L=2
@@ -86,3 +86,4 @@ if make.lower() == "y":
     writer = Writer(fps=FPS_PLAY, metadata=dict(artist='Me'), bitrate=1800)
     anim.save('./vid.mp4', writer=writer)
     print("Saved to: " + os.path.abspath('./vid.mp4'))
+
