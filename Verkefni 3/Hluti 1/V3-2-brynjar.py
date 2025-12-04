@@ -14,8 +14,8 @@ def ydot(t, x):
 n = 100
 T = 3
 h = T/n
-#x = [m.radians(20), 0]
-x = [1, 1]
+x = [m.radians(20), 0]
+# x = [1, 1]
 
 t = 0
 for i in range(n):
