@@ -20,4 +20,3 @@ def mjaaa(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
     l = m2*l2*(m.cos(delta)**2)
     func2 = (-i+j)/(k-l)
     return [x2, func1, y2, func2]
-    
