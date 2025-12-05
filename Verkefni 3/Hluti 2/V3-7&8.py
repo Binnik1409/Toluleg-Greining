@@ -18,8 +18,9 @@ theta_both = [theta1,theta2]
 
 x1 = [l1*m.sin(theta) for theta in theta1]
 y1 = [-l1*m.cos(theta) for theta in theta1]
-x2 = [l2*m.sin(theta_both[0][i])+l2*m.sin(theta_both[1][i]) for i in range(len(theta_both))]
-y2 = [-l1*m.cos(theta_both[0][i])-l2*m.cos(theta_both[1][i]) for i in range(len(theta_both))]
+x2 = [l2*m.sin(theta_both[0][i])+l2*m.sin(theta_both[1][i]) for i in range(len(theta1))]
+y2 = [-l1*m.cos(theta_both[0][i])-l2*m.cos(theta_both[1][i]) for i in range(len(theta1))]
+
 
 ### V3-8 ###
 

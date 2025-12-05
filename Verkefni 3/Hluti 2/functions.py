@@ -11,7 +11,7 @@ def RKsolverLotkaVolterra(y0, T, n, f):
     theta = [y0[0]]
     omega = [y0[1]]
 
-    for i in range(n):
+    for _ in range(n):
         k1 = f(y)
         k2 = f(y + 0.5*h*k1)
         k3 = f(y + 0.5*h*k2)
@@ -54,16 +54,17 @@ def f(y):
     return np.array([d_theta,d_omega])
 
 
-def make_plt(pendulums, theta, filename='vid.mp4'):
+def make_plt(pendulums, theta, filename='vid.mp4',fps=30):
 
-    # pendulums = single ->[(x1, y1)] double->[(x1, y1),(x2, y2)]
+    num_p = len(pendulums)  # 1 or 2
 
-    num_p = len(pendulums)      # number of pendulums: 1 or 2
 
     plt.close("all")
     fig = plt.figure()
     ax = fig.add_subplot(
-        111, autoscale_on=False, xlim=(-3, 3), ylim=(-3, 3), aspect="equal"
+        111, autoscale_on=False,
+        xlim=(-5, 5), ylim=(-5, 5),
+        aspect="equal"
     )
     plt.xlabel("Lengdareining")
     plt.ylabel("Lengdareining")
@@ -74,12 +75,23 @@ def make_plt(pendulums, theta, filename='vid.mp4'):
     line_objects = []
     circle_objects = []
 
-    for i in range(num_p):
-        x, y = pendulums[i]
-        line, = ax.plot([0, x[0]], [0, y[0]], "b-", lw=2)
-        circ = ax.add_patch(plt.Circle((x[0], y[0]), 0.1, fc="r", zorder=3))
-        line_objects.append(line)
-        circle_objects.append(circ)
+    # PENDULUM 1 
+    x1, y1 = pendulums[0]
+    line1, = ax.plot([0, x1[0]], [0, y1[0]], "b-", lw=2)
+    bob1 = ax.add_patch(plt.Circle((x1[0], y1[0]), 0.1, fc="r", zorder=3))
+
+    line_objects.append(line1)
+    circle_objects.append(bob1)
+
+    # PENDULUM 2 
+    if num_p == 2:
+        x2, y2 = pendulums[1]
+        line2, = ax.plot([x1[0], x2[0]], [y1[0], y2[0]], "b-", lw=2)
+        bob2 = ax.add_patch(plt.Circle((x2[0], y2[0]), 0.1, fc="r", zorder=3))
+
+        line_objects.append(line2)
+        circle_objects.append(bob2)
+
 
     def init():
         for line in line_objects:
@@ -88,22 +100,25 @@ def make_plt(pendulums, theta, filename='vid.mp4'):
             circ.center = (-1000, -1000)
         return line_objects + circle_objects
 
+
     def animate(i):
 
-        for p in range(num_p):
-            x, y = pendulums[p]
 
-            # Rod always starts from (0,0) for each pendulum
-            line_objects[p].set_data([0, x[i]], [0, y[i]])
+        x1_i, y1_i = x1[i], y1[i]
+        line1.set_data([0, x1_i], [0, y1_i])
+        bob1.center = (x1_i, y1_i)
 
-            # Move bob
-            circle_objects[p].center = (x[i], y[i])
+        if num_p == 2:
+            x2_i, y2_i = x2[i], y2[i]
+            line2.set_data([x1_i, x2_i], [y1_i, y2_i])
+            bob2.center = (x2_i, y2_i)
 
         return line_objects + circle_objects
 
     anim = animation.FuncAnimation(
         fig, animate, frames=len(theta),
-        interval=1000/FPS_PLAY, blit=True, init_func=init
+        interval=1000/FPS_PLAY, blit=True,
+        init_func=init
     )
 
     plt.show()
@@ -116,6 +131,8 @@ def make_plt(pendulums, theta, filename='vid.mp4'):
         print("Saved to:", filename)
     else:
         print("Video not saved.")
+
+
 
 
 def mjaaa(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
@@ -140,13 +157,15 @@ def mjaaa(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
     k = (m1+m2)*l2
     l = m2*l2*((1-m.cos(2*delta))/2)
     func2 = (-i+j)/(k-l)
-    return [y3, y4, func1, func2]
+
+    return np.array([y3, y4, func1, func2])
 
 
-def RKsolverLotkaVolterra_Y4(y0, T, n, f, m1=1, m2=1, l1=2, l2=2, g=9.81): # modified for vector y 4x1
+def RKsolverLotkaVolterra_Y4(y0, T, n, f): # modified for vector y 4x1
 
-    y = np.array(y0, dtype=float)
     h = T / n  # time step
+
+    y = y0
 
     # y0 = [y1, y2, y3, y4] = [θ1, θ2, ω1, ω2]
     y1 = [y0[0]]
@@ -155,10 +174,10 @@ def RKsolverLotkaVolterra_Y4(y0, T, n, f, m1=1, m2=1, l1=2, l2=2, g=9.81): # mod
     y4 = [y0[3]]
 
     for _ in range(n):
-        k1 = f(y, m1, m2, l1, l2, g)
-        k2 = f(y + 0.5*h*k1, m1, m2, l1, l2, g)
-        k3 = f(y + 0.5*h*k2, m1, m2, l1, l2, g)
-        k4 = f(y + h*k3, m1, m2, l1, l2, g)
+        k1 = f(y)
+        k2 = f(y + 0.5*h*k1)
+        k3 = f(y + 0.5*h*k2)
+        k4 = f(y + h*k3)
 
         y = y + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
         y1.append(y[0])
