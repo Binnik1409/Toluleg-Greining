@@ -159,9 +159,10 @@ def mjaaa(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
     func2 = (-i+j)/(k-l)
 
     return np.array([y3, y4, func1, func2])
+    return np.array([y3, y4, func1, func2]) 
 
 
-def RKsolverLotkaVolterra_Y4(y0, T, n, f): # modified for vector y 4x1
+def RKsolver_Y4(y0, T, n, f, y_final=''): # modified for vector y 4x1
 
     h = T / n  # time step
 
@@ -184,8 +185,90 @@ def RKsolverLotkaVolterra_Y4(y0, T, n, f): # modified for vector y 4x1
         y2.append(y[1])
         y3.append(y[2])
         y4.append(y[3])
+    if y_final == 'y':
+        return np.array(y1[-1], y2[-1], y3[-1], y4[-1])
+    else:
+        return np.array([y1, y2, y3, y4]) # θ1:list, θ2:list, ω1:list, ω2:list
 
     return y1, y2, y3, y4 # θ1:list, θ2:list, ω1:list, ω2:list
+
+def make_plt(pendulums, theta, filename='vid.mp4',fps=30):
+
+    num_p = len(pendulums)  # 1 or 2
+
+
+    plt.close("all")
+    fig = plt.figure()
+    ax = fig.add_subplot(
+        111, autoscale_on=False,
+        xlim=(-5, 5), ylim=(-5, 5),
+        aspect="equal"
+    )
+    plt.xlabel("Lengdareining")
+    plt.ylabel("Lengdareining")
+    fig.tight_layout()
+
+    FPS_PLAY = 30
+
+    line_objects = []
+    circle_objects = []
+
+    # PENDULUM 1 
+    x1, y1 = pendulums[0]
+    line1, = ax.plot([0, x1[0]], [0, y1[0]], "b-", lw=2)
+    bob1 = ax.add_patch(plt.Circle((x1[0], y1[0]), 0.1, fc="r", zorder=3))
+
+    line_objects.append(line1)
+    circle_objects.append(bob1)
+
+    # PENDULUM 2 
+    if num_p == 2:
+        x2, y2 = pendulums[1]
+        line2, = ax.plot([x1[0], x2[0]], [y1[0], y2[0]], "b-", lw=2)
+        bob2 = ax.add_patch(plt.Circle((x2[0], y2[0]), 0.1, fc="r", zorder=3))
+
+        line_objects.append(line2)
+        circle_objects.append(bob2)
+
+
+    def init():
+        for line in line_objects:
+            line.set_data([], [])
+        for circ in circle_objects:
+            circ.center = (-1000, -1000)
+        return line_objects + circle_objects
+
+
+    def animate(i):
+
+
+        x1_i, y1_i = x1[i], y1[i]
+        line1.set_data([0, x1_i], [0, y1_i])
+        bob1.center = (x1_i, y1_i)
+
+        if num_p == 2:
+            x2_i, y2_i = x2[i], y2[i]
+            line2.set_data([x1_i, x2_i], [y1_i, y2_i])
+            bob2.center = (x2_i, y2_i)
+
+        return line_objects + circle_objects
+
+    anim = animation.FuncAnimation(
+        fig, animate, frames=len(theta),
+        interval=1000/FPS_PLAY, blit=True,
+        init_func=init
+    )
+
+    plt.show()
+
+    choice = input("Make video file? (Y/N): ").strip().lower()
+    if choice == "y":
+        Writer = animation.writers["ffmpeg"]
+        writer = Writer(fps=fps, metadata=dict(artist="Me"), bitrate=1800)
+        anim.save(filename, writer=writer)
+        print("Saved to:", filename)
+    else:
+        print("Video not saved.")
 
 
 def make_multi_pendulums_plt(pendulums_list, theta, filename='vid.mp4', fps=30):

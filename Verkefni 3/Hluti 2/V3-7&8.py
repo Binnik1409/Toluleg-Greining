@@ -13,7 +13,7 @@ n = 250
 y0 = [m.pi/3, m.pi/6, 0, 0] # [θ1, θ2, ω1, ω2]
 
 
-theta1, theta2, omega1, omega2 = f.RKsolverLotkaVolterra_Y4(y0, T, n, f.mjaaa)
+theta1, theta2, omega1, omega2 = f.RKsolver_Y4(y0, T, n, f.f2)
 theta_both = [theta1,theta2]
 
 x1 = [l1*m.sin(theta) for theta in theta1]
