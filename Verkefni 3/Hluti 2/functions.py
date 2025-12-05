@@ -135,7 +135,7 @@ def make_plt(pendulums, theta, filename='vid.mp4',fps=30):
 
 
 
-def mjaaa(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
+def f2(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
     
     # start = [y1, y2, y3, y4] = [θ1, θ2, ω1, ω2]
     y1 = start[0]
@@ -161,7 +161,7 @@ def mjaaa(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
     return np.array([y3, y4, func1, func2])
 
 
-def RKsolverLotkaVolterra_Y4(y0, T, n, f): # modified for vector y 4x1
+def RKsolver_Y4(y0, T, n, f, y_final=''): # modified for vector y 4x1
 
     h = T / n  # time step
 
@@ -184,27 +184,7 @@ def RKsolverLotkaVolterra_Y4(y0, T, n, f): # modified for vector y 4x1
         y2.append(y[1])
         y3.append(y[2])
         y4.append(y[3])
-
-    return y1, y2, y3, y4 # θ1:list, θ2:list, ω1:list, ω2:list
-
-def RKsolver_loka_gildi(y0, T, n, f): # modified for vector y 4x1
-
-    h = T / n  # time step
-
-    y = y0
-
-
-    for i in range(n):
-        k1 = f(y)
-        k2 = f(y + 0.5*h*k1)
-        k3 = f(y + 0.5*h*k2)
-        k4 = f(y + h*k3)
-
-        y = y + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
-        if i == n-1:
-            y1 = y[0]
-            y2 = y[1]
-            y3 = y[2]
-            y4 = y[3]
-
-    return np.array([y1, y2, y3, y4]) # θ1:list, θ2:list, ω1:list, ω2:list
+    if y_final == 'y':
+        return np.array(y1[-1], y2[-1], y3[-1], y4[-1])
+    else:
+        return np.array([y1, y2, y3, y4]) # θ1:list, θ2:list, ω1:list, ω2:list

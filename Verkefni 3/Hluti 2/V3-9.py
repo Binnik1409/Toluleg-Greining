@@ -11,10 +11,10 @@ y0 = [m.pi-0.2,m.pi,0,0]
 
 sol = []
 for n in N:
-    res = f.RKsolver_loka_gildi(y0, T, n, f.mjaaa)
+    res = f.RKsolver_Y4(y0, T, n, f.f2,'y')
     sol.append(res)
 
-res_ref = f.RKsolver_loka_gildi(y0, T, 12800, f.mjaaa)
+res_ref = f.RKsolver_Y4(y0, T, 12800, f.f2,'y')
 
 errors = []
 for res in sol:        
