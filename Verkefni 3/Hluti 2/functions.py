@@ -186,3 +186,25 @@ def RKsolverLotkaVolterra_Y4(y0, T, n, f): # modified for vector y 4x1
         y4.append(y[3])
 
     return y1, y2, y3, y4 # θ1:list, θ2:list, ω1:list, ω2:list
+
+def RKsolver_loka_gildi(y0, T, n, f): # modified for vector y 4x1
+
+    h = T / n  # time step
+
+    y = y0
+
+
+    for i in range(n):
+        k1 = f(y)
+        k2 = f(y + 0.5*h*k1)
+        k3 = f(y + 0.5*h*k2)
+        k4 = f(y + h*k3)
+
+        y = y + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
+        if i == n-1:
+            y1 = y[0]
+            y2 = y[1]
+            y3 = y[2]
+            y4 = y[3]
+
+    return np.array([y1, y2, y3, y4]) # θ1:list, θ2:list, ω1:list, ω2:list
