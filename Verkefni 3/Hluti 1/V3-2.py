@@ -8,8 +8,6 @@ def ydot(yi, g=9.81, L=2):
 def eulerstep(yi, h, func):
     return [x + h*func(yi)[i] for i,x in enumerate(yi)]
 
-
-
 y0 = [1, 1] #!!!!!!!!!!!!!!!!
 
 y = [y0]
