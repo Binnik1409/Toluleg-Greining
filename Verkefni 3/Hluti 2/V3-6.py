@@ -1,5 +1,6 @@
 import math as m
 
+# start er listi i þessu formi [x1, x2, y1, y2] þar sem x1 = hornið og x2 = hornhraði, sama með y1 og y2.
 def mjaaa(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
     x1 = start[0]
     x2 = start[1]
@@ -19,5 +20,4 @@ def mjaaa(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
     l = m2*l2*(m.cos(delta)**2)
     func2 = (-i+j)/(k-l)
     return [x2, func1, y2, func2]
-
     
