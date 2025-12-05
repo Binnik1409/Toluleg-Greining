@@ -54,6 +54,61 @@ def f(y):
     return np.array([d_theta,d_omega])
 
 
+def f2(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
+    
+    # start = [y1, y2, y3, y4] = [θ1, θ2, ω1, ω2]
+    y1 = start[0]
+    y2 = start[1]
+    y3 = start[2]
+    y4 = start[3]
+
+    delta = y2-y1 # Δ = θ2 - θ1
+
+    a = m2*l1*(y3**2)*m.sin(delta)*m.cos(delta)
+    b = m2*g*m.sin(y2)*m.cos(delta)
+    c = m2*l2*(y4**2)*m.sin(delta)
+    d = (m1+m2)*g*m.sin(y1)
+    e = (m1+m2)*l1
+    f = m2*l1*((1-m.cos(2*delta))/2)
+    func1 = (a+b+c-d)/(e-f)
+    i = m2*l2*(y4**2)*m.sin(delta)*m.cos(delta)
+    j = (m1+m2)*(g*m.sin(y1)*m.cos(delta)-l1*(y3**2)*m.sin(delta)-g*m.sin(y2))
+    k = (m1+m2)*l2
+    l = m2*l2*((1-m.cos(2*delta))/2)
+    func2 = (-i+j)/(k-l)
+
+    return np.array([y3, y4, func1, func2]) 
+
+
+def RKsolver_Y4(y0, T, n, f, y_final=''): # modified for vector y 4x1
+
+    h = T / n  # time step
+
+    y = y0
+
+    # y0 = [y1, y2, y3, y4] = [θ1, θ2, ω1, ω2]
+    y1 = [y0[0]]
+    y2 = [y0[1]]
+    y3 = [y0[2]]
+    y4 = [y0[3]]
+
+    for _ in range(n):
+        k1 = f(y)
+        k2 = f(y + 0.5*h*k1)
+        k3 = f(y + 0.5*h*k2)
+        k4 = f(y + h*k3)
+
+        y = y + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
+        y1.append(y[0])
+        y2.append(y[1])
+        y3.append(y[2])
+        y4.append(y[3])
+    if y_final == 'y':
+        return np.array(y1[-1], y2[-1], y3[-1], y4[-1])
+    else:
+        return np.array([y1, y2, y3, y4]) # θ1:list, θ2:list, ω1:list, ω2:list
+
+
 def make_plt(pendulums, theta, filename='vid.mp4',fps=30):
 
     num_p = len(pendulums)  # 1 or 2
@@ -132,59 +187,3 @@ def make_plt(pendulums, theta, filename='vid.mp4',fps=30):
     else:
         print("Video not saved.")
 
-
-
-
-def f2(start, m1=1, m2=1, l1=2, l2=2, g=9.81):
-    
-    # start = [y1, y2, y3, y4] = [θ1, θ2, ω1, ω2]
-    y1 = start[0]
-    y2 = start[1]
-    y3 = start[2]
-    y4 = start[3]
-
-    delta = y2-y1 # Δ = θ2 - θ1
-
-    a = m2*l1*(y3**2)*m.sin(delta)*m.cos(delta)
-    b = m2*g*m.sin(y2)*m.cos(delta)
-    c = m2*l2*(y4**2)*m.sin(delta)
-    d = (m1+m2)*g*m.sin(y1)
-    e = (m1+m2)*l1
-    f = m2*l1*((1-m.cos(2*delta))/2)
-    func1 = (a+b+c-d)/(e-f)
-    i = m2*l2*(y4**2)*m.sin(delta)*m.cos(delta)
-    j = (m1+m2)*(g*m.sin(y1)*m.cos(delta)-l1*(y3**2)*m.sin(delta)-g*m.sin(y2))
-    k = (m1+m2)*l2
-    l = m2*l2*((1-m.cos(2*delta))/2)
-    func2 = (-i+j)/(k-l)
-
-    return np.array([y3, y4, func1, func2])
-
-
-def RKsolver_Y4(y0, T, n, f, y_final=''): # modified for vector y 4x1
-
-    h = T / n  # time step
-
-    y = y0
-
-    # y0 = [y1, y2, y3, y4] = [θ1, θ2, ω1, ω2]
-    y1 = [y0[0]]
-    y2 = [y0[1]]
-    y3 = [y0[2]]
-    y4 = [y0[3]]
-
-    for _ in range(n):
-        k1 = f(y)
-        k2 = f(y + 0.5*h*k1)
-        k3 = f(y + 0.5*h*k2)
-        k4 = f(y + h*k3)
-
-        y = y + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
-        y1.append(y[0])
-        y2.append(y[1])
-        y3.append(y[2])
-        y4.append(y[3])
-    if y_final == 'y':
-        return np.array(y1[-1], y2[-1], y3[-1], y4[-1])
-    else:
-        return np.array([y1, y2, y3, y4]) # θ1:list, θ2:list, ω1:list, ω2:list
