@@ -8,18 +8,20 @@ def RKsolverLotkaVolterra(y0, T, n, f):
 
     y = np.array(y0, dtype=float)
     h = T / n  # time step
-    sol = [y]
+    theta = [y0[0]]
+    omega = [y0[1]]
 
-    for _ in range(n):
+    for i in range(n):
         k1 = f(y)
         k2 = f(y + 0.5*h*k1)
         k3 = f(y + 0.5*h*k2)
         k4 = f(y + h*k3)
 
         y = y + (h/6) * (k1 + 2*k2 + 2*k3 + k4)
-        sol.append(y)
+        theta.append(y[0])
+        omega.append(y[1])
 
-    return sol
+    return theta, omega
 
 
 def ydot(yi, L=2, g=9.81):
@@ -111,8 +113,8 @@ def make_plt(x, y, theta):
 
 
 
-def save_animation_prompt(anim, filename="vid.mp4", fps=30):
-    """Ask user whether to save animation as video and save if requested."""
+def save_animation(anim, filename="vid.mp4", fps=30):
+    
     choice = input("Make video file? (Y/N): ").strip().lower()
     if choice == "y":
         Writer = animation.writers['ffmpeg']
