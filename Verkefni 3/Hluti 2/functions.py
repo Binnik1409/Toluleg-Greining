@@ -187,3 +187,60 @@ def make_plt(pendulums, theta, filename='vid.mp4',fps=30):
     else:
         print("Video not saved.")
 
+def make_path_plt(pendulums, theta, filename='vid.mp4', fps=30):
+    """
+    Teiknar hreyfimynd af ferlinum sem massarnir teikna.
+    pendulums: listi af (x, y) pörum, t.d. [(x1, y1), (x2, y2)].
+    theta er bara notað til að vita fjölda ramma (len(theta)).
+    """
+
+    num_p = len(pendulums)
+
+    plt.close("all")
+    fig = plt.figure()
+    ax = fig.add_subplot(
+        111, autoscale_on=False,
+        xlim=(-5, 5), ylim=(-5, 5),
+        aspect="equal"
+    )
+    plt.xlabel("Lengdareining")
+    plt.ylabel("Lengdareining")
+    fig.tight_layout()
+
+    FPS_PLAY = 30
+
+    line_objects = []
+
+    # Ein lína fyrir hverja slóð
+    for x, y in pendulums:
+        line, = ax.plot([], [], lw=2)
+        line_objects.append(line)
+
+    def init():
+        for line in line_objects:
+            line.set_data([], [])
+        return line_objects
+
+    def animate(i):
+        # Teiknum slóðina fram að tíma i
+        for line, (x, y) in zip(line_objects, pendulums):
+            line.set_data(x[:i + 1], y[:i + 1])
+        return line_objects
+
+    anim = animation.FuncAnimation(
+        fig, animate, frames=len(theta),
+        interval=1000 / FPS_PLAY, blit=True,
+        init_func=init
+    )
+
+    plt.show()
+
+    choice = input("Make video file? (Y/N): ").strip().lower()
+    if choice == "y":
+        Writer = animation.writers["ffmpeg"]
+        writer = Writer(fps=fps, metadata=dict(artist="Me"), bitrate=1800)
+        anim.save(filename, writer=writer)
+        print("Saved to:", filename)
+    else:
+        print("Video not saved.")
+
