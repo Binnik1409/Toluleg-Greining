@@ -158,7 +158,7 @@ def make_plt(pendulums, theta, filename='vid.mp4',fps=30,frame=5):
     plt.ylabel("Lengdareining")
     fig.tight_layout()
 
-    FPS_PLAY = 30
+    FPS_PLAY = 100
 
     line_objects = []
     circle_objects = []
@@ -218,7 +218,7 @@ def make_plt(pendulums, theta, filename='vid.mp4',fps=30,frame=5):
 
     anim = animation.FuncAnimation(
         fig, animate, frames=len(theta),
-        interval=100/FPS_PLAY, blit=True,
+        interval=1000/FPS_PLAY, blit=True,
         init_func=init
     )
 
