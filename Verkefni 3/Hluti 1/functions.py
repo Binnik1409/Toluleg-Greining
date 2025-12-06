@@ -23,7 +23,6 @@ def RKsolverLotkaVolterra(y0, T, n, f):
 
     return theta, omega
 
-
 def ydot(yi, L=2, g=9.81):
     return [yi[1], (-g/L)*m.sin(yi[0])]
 
@@ -52,7 +51,6 @@ def f(y):
     d_theta = omega
     d_omega = -(g/L)*m.sin(theta)
     return np.array([d_theta,d_omega])
-
 
 def make_plt(x, y, theta):
 
@@ -110,8 +108,6 @@ def make_plt(x, y, theta):
     plt.show()
 
     return anim
-
-
 
 def save_animation(anim, filename="vid.mp4", fps=30):
     
