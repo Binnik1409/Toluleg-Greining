@@ -33,4 +33,3 @@ plt.ylabel("skekkja")
 plt.legend()
 plt.grid(True, which="both")
 plt.show()
-
