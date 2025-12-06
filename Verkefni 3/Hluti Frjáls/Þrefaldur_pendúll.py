@@ -20,6 +20,5 @@ y2 = [-l1*m.cos(theta1[i])-l2*m.cos(theta2[i]) for i in range(len(theta1))]
 x3 = [l1*m.sin(theta1[i])+l2*m.sin(theta2[i])+l3*m.sin(theta3[i]) for i in range(len(theta1))]
 y3 = [-l1*m.cos(theta1[i])-l2*m.cos(theta2[i])-l3*m.cos(theta3[i]) for i in range(len(theta1))]
 
-### V3-8 ###
 
 f.make_plt([(x1, y1),(x2, y2),(x3, y3)],theta1,'V3-þrefaldur_pendúll.mp4',120,frame=6)
