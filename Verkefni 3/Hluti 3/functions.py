@@ -367,4 +367,20 @@ def make_multi_pendulums_plt(pendulums_list, theta, filename='vid.mp4', fps=30):
         print("Video not saved.")
 
 
-    
+def makeDoublePendulumCoords(y0, T, n, l1=2, l2=2):
+    '''
+    y0=[theta1_0, theta2_0, omega1_0, omega2_0]
+    '''
+
+    theta1, theta2, omega1, omega2 = RKsolver_Y4(y0, T, n, mjaaa)
+    theta_both = [theta1,theta2]
+
+    x1 = [l1*m.sin(theta) for theta in theta1]
+    y1 = [-l1*m.cos(theta) for theta in theta1]
+    x2 = [l2*m.sin(theta_both[0][i])+l2*m.sin(theta_both[1][i]) for i in range(len(theta1))]
+    y2 = [-l1*m.cos(theta_both[0][i])-l2*m.cos(theta_both[1][i]) for i in range(len(theta1))]
+    return ((x1, y1), (x2, y2))
+    #f.make_plt([(x1, y1),(x2, y2)], theta1, filename, fps)
+
+def getDistance(x1, y1, x2, y2):
+    return m.sqrt((x2-x1)**2 + (y2-y1)**2)
