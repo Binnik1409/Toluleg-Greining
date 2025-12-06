@@ -104,7 +104,7 @@ def RKsolver_Y4(y0, T, n, f, y_final=''): # modified for vector y 4x1
         y3.append(y[2])
         y4.append(y[3])
     if y_final == 'y':
-        return np.array(y1[-1], y2[-1], y3[-1], y4[-1])
+        return y1[-1], y2[-1], y3[-1], y4[-1]
     else:
         return np.array([y1, y2, y3, y4]) # θ1:list, θ2:list, ω1:list, ω2:list
 
