@@ -22,6 +22,5 @@ x2 = [l2*m.sin(theta_both[0][i])+l2*m.sin(theta_both[1][i]) for i in range(len(t
 y2 = [-l1*m.cos(theta_both[0][i])-l2*m.cos(theta_both[1][i]) for i in range(len(theta1))]
 
 
-### V3-8 ###
+f.make_plt([(x1, y1),(x2, y2)],theta1,'V3-7.mp4')
 
-f.make_plt([(x1, y1),(x2, y2)],theta1,'V3-8.mp4')
