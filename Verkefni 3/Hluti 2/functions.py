@@ -187,6 +187,7 @@ def make_plt(pendulums, theta, filename='vid.mp4',fps=30):
     else:
         print("Video not saved.")
 
+
 def make_path_plt(pendulums, theta, filename='vid.mp4', fps=30):
     """
     Teiknar hreyfimynd af ferlinum sem massarnir teikna.
