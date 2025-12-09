@@ -1,9 +1,8 @@
 import functions as f
 import numpy as np
-import matplotlib.pyplot as plt
 
 
-def make_matrix(n,m,Lx,Ly,L):
+def make_matrix(n,m,Lx,Ly,L,P,K,H,initial_temp=0):
 
     dx = Lx / n
     dy = Ly / m
@@ -20,5 +19,5 @@ def make_matrix(n,m,Lx,Ly,L):
                 ...
             else: # hægra megin, neðri hluti
                 ...
-                
+
     return matrix
