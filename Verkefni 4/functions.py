@@ -1,6 +1,3 @@
-import numpy as np
-import scipy.sparse as sp
-
 
 def build_part_of_A(n, a, b, c, alpha, theta):        
 
