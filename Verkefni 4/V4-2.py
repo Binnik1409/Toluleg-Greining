@@ -1,5 +1,6 @@
 import numpy as np
-
+import scipy.sparse as sp
+import functions as f
 
 
 ### Fastar ###
@@ -15,3 +16,20 @@ H = 0.005
 Upphafshitastig = 20
 
 m = n = 10
+
+
+## Fyrsta og seinasta lína í A
+a = 1
+b = 2
+c = 3
+alpha = 0.5
+
+i, j, gildi = f.build_part_of_A(n, a, b, c, alpha)
+
+
+
+    
+
+
+A = sp.coo_matrix((gildi, (i, j))).tocsc()
+

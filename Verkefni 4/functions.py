@@ -1,23 +1,46 @@
-import functions as f
 import numpy as np
+import scipy.sparse as sp
 
 
-def make_matrix(n,m,Lx,Ly,L,P,K,H,initial_temp=0):
+def build_part_of_A(n, a, b, c, alpha):        
 
-    dx = Lx / n
-    dy = Ly / m
+    i = [] 
+    j = []
+    gildi = []
 
-    matrix = np.zeros((n,m))
-    for m,j in enumerate(range(0,Ly,dy)):
-        for n,i in enumerate(range(0,Lx,dx)):
+    for k in range(n):
+        
+        if k==0:
+            i.append(k)
+            i.append(k)
+            i.append(k)
+            j.append(k)
+            j.append(k+1)
+            j.append(k+2)
+            gildi.append(a)
+            gildi.append(b)
+            gildi.append(c)
+        if k==n:
+            i.append(k)
+            i.append(k)
+            i.append(k)
+            j.append(k)
+            j.append(k+1)
+            j.append(k+2)
+            gildi.append(c)
+            gildi.append(b)
+            gildi.append(a)
+        else:
+            i.append(k)
+            i.append(k+1)
+            i.append(k+2)
+            j.append(k)
+            j.append(k+1)
+            j.append(k+2)
+            gildi.append(1)
+            gildi.append(alpha)
+            gildi.append(1)
+        
+    return i, j, gildi
 
-            if i <= Lx/2 and j <= L: # vinstra megin, neðri hluti
-                ...
-            elif i <= Lx/2 and j > L: # vinstra megin, efri hluti
-                ...
-            elif i > Lx/2 and j >= Ly/2: # hægra megin, efri hluti
-                ...
-            else: # hægra megin, neðri hluti
-                ...
 
-    return matrix
