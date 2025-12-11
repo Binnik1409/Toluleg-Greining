@@ -13,7 +13,7 @@ def idx(i, j, n):
 def build_system(m, n, Lx, Ly, K, H, delta, P, L):
     hx = Lx/(m-1)
     hy = Ly/(n-1)
-
+    l_ratio = L/Ly
     alpha = 2*H/(K*delta)
 
     N = m*n
@@ -37,17 +37,23 @@ def build_system(m, n, Lx, Ly, K, H, delta, P, L):
                 continue
 
             # boundary conditions:
-            # Left boundary x=0
+            # Left boundary (x = 0)
             if i == 0:
-                A[k, k] = -1/hx - H/K
 
-                # Is this point in the heat input segment?
                 if y <= L:
-                    b[k] = -P/(L*delta*K)
+                    # LOWER HALF: heat input BC
+                    A[k, k] = -1/hx
+                    A[k, idx(1, j, n)] = 1/hx
+                    b[k] = -P / (L * delta * K)
+
                 else:
+                    # UPPER HALF: convection BC
+                    A[k, k] = -1/hx - H/K
+                    A[k, idx(1, j, n)] = 1/hx
                     b[k] = 0
-                A[k, idx(i+1, j, n)] = 1/hx
+
                 continue
+
 
             # Right boundary x=Lx
             if i == m-1:

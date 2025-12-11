@@ -18,6 +18,7 @@ m = n = 10
 A, b = f.build_system(m, n, Lx, Ly, K, H, delta, P, L)
 v = spla.spsolve(A, b)
 U = v.reshape((m, n))
+U = U + 20  # convert to °C above ambient
 
 print("Max temperature (°C above ambient):", U.max())
 print("Should be ≈ 164.9626 °C")  # from PDF
@@ -30,3 +31,4 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 ax.plot_surface(XX, YY, U.T)
 plt.show()
+
