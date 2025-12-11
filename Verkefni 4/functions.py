@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.sparse as sp
-
+import functions as f
+import matplotlib.pyplot as plt
 
 def build_part_of_A(n, a, b, c, alpha, theta):        
 
