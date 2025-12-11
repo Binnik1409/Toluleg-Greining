@@ -1,7 +1,10 @@
 import scipy.sparse as sp
 import numpy as np
+import matplotlib.pyplot as plt
 
-def ehhh(n, m, hx, hy, L=2, H=0.005, K=1.68, d=0.1, P=5):
+def ehhh(n, m, Lx, Ly, Lp=2, H=0.005, K=1.68, d=0.1, P=5):
+    hx = Lx / (m - 1)
+    hy = Ly / (n - 1)
     Ai = []
     Aj = []
     Agildi = []
@@ -9,16 +12,16 @@ def ehhh(n, m, hx, hy, L=2, H=0.005, K=1.68, d=0.1, P=5):
     Bgildi = []
     for k in range(n*m):
         if k % n == 0:
-            if k * hy > L:
+            if (k/n) * hy > Lp:
                 Ai += [k]*3
                 Aj += [k+2, k+1, k]
-                Agildi += [-1, 4, ((2*H*hx)/K)-3]         
+                Agildi += [-1, 4, ((2*H*hx)/K)-3]
             else:
                 Ai += [k]*3
                 Aj += [k, k+1, k+2]
-                Agildi += [3, -4, 1]
-                Bi += [k]
-                Bgildi += [(-2*P*hx)/(L*d*K)]
+                Agildi += [-3, 4, -1]
+                Bi.append(k)
+                Bgildi.append((-2*P*hx)/(Lp*d*K))
         elif k % n == n-1:
             Ai += [k]*3
             Aj += [k-2, k-1, k]
@@ -27,7 +30,7 @@ def ehhh(n, m, hx, hy, L=2, H=0.005, K=1.68, d=0.1, P=5):
             Ai += [k]*3
             Aj += [k, k+m, k+2*m]
             Agildi += [((2*H*hx)/K)-3, 4, -1]
-        elif k // n == m-1:
+        elif k // n == n-1:
             Ai += [k]*3
             Aj += [k, k-m, k-2*m]
             Agildi += [((-2*H*hx)/K)-3, 4, -1]
@@ -37,8 +40,23 @@ def ehhh(n, m, hx, hy, L=2, H=0.005, K=1.68, d=0.1, P=5):
             Agildi += [hx**2, hy**2, ((2*H*(hx**2)*(hy**2))/(K*d))-4, hy**2, hx**2]
     return Ai, Aj, Agildi, Bi, Bgildi
 
-Ai, Aj, Agildi, Bi, Bgildi = ehhh(5, 5, 1, 1)
-A = sp.coo_matrix((Agildi,(Ai,Aj)),shape=(5*5,5*5)).tocsr()
-print(A.toarray())
+m = 5
+n = 5
+Lx = 2
+Ly = 2
 
+Ai, Aj, Agildi, bi, bgildi = ehhh(n, m, Lx, Ly)
+A = sp.coo_matrix((Agildi,(Ai,Aj)),shape=(n*m,n*m)).tocsr()
+bj = np.zeros(len(bi))
+b = sp.coo_matrix((bgildi, (bi,bj)),shape=(n*m, 1)).tocsr()
 
+A_solved = sp.linalg.spsolve(A, b)
+
+print(A_solved)
+print(b)
+
+# plt.spy(A)
+# plt.show()
+
+plt.imshow(A_solved.reshape((n,m)))
+plt.show()
