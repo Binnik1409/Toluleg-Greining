@@ -11,7 +11,6 @@ x = np.linspace(0, np.pi/2, n)
 
 
 alpha = -2 + h**2
-print(h)
 
 
 diag1 = np.diag([1 for i in range(n-1)], -1)
@@ -24,7 +23,7 @@ A[0][2] = -1
 A[-1][-1] = -3-4*h
 A[-1][-2] = 4
 A[-1][-3] = -1
-#print(A)
+print(A)
 
 b = np.zeros(n)
 b[0] = 0
