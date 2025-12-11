@@ -1,84 +1,155 @@
-
 import numpy as np
 from scipy.sparse import coo_matrix
 from scipy.sparse.linalg import spsolve
 import matplotlib.pyplot as plt
 
-m, n = 10, 10
-a, b, c, d = 0, 2, 0, 2
-C, h = 1.68, 0.005
-hx = (b - a) / (m - 1)
-hy = (d - c) / (n - 1)
+# ---------------------------
+# Physical parameters (user)
+# ---------------------------
+Lx = 2.0          # cm
+Ly = 2.0          # cm
+delta = 0.1       # cm
+P = 5.0           # W total power injected
+k = 1.68          # W/(cm·°C)
+H = 0.005         # W/(cm²·°C)
+T_inf = 20.0      # °C
 
-# six coefficients
-alpha = 1 / (hy ** 2)
-beta = 1 / (hx ** 2)
-gamma = -2 / (hx ** 2) - 2 / (hy ** 2)
-delta = C / (2 * hx)
-epsilon = (2 * C) / hx
-zeta = (3 * C) / (2 * hx) + h
+# Length of the heated segment on the left boundary
+L_in = 1.0        # cm  (uniform heat flux only in y ∈ [0, L_in])
 
-# main diagonal
-i = list(range(1, m * n + 1))
-j = list(range(1, m * n + 1))
-x = np.concatenate(([-3], gamma * np.ones(m - 2), [zeta]))
-maindiag = np.concatenate((np.ones(m), np.tile(x, m - 2), np.ones(m)))
+# ---------------------------
+# Discretization
+# ---------------------------
+m = 41
+n = 41
+hx = Lx / (m - 1)
+hy = Ly / (n - 1)
 
-# upper diagonal one off
-i += list(range(1, m * n))
-j += list(range(2, m * n + 1))
-x = np.concatenate(([4], beta * np.ones(m - 2), [0]))
-upperdiag = np.concatenate((np.zeros(m), np.tile(x, m - 2), np.zeros(m - 1)))
+alpha = k / (hy**2)
+beta = k / (hx**2)
+center_coef = -2.0 * (alpha + beta)
 
-# upper diagonal two off
-i += list(range(1, m * n - 1))
-j += list(range(3, m * n + 1))
-x = np.concatenate(([-1], np.zeros(m - 1)))
-upperdiag2 = np.concatenate((np.zeros(m), np.tile(x, m - 2), np.zeros(m - 2)))
+# --------------------------------------------
+# Compute uniform flux only on heated segment
+# --------------------------------------------
+# Total heated length = L_in
+# Total applied power = P
+# Thus uniform q'' (W/cm²) is:
+q_in = P / (L_in * delta)
 
-# lower diagonal one off
-i += list(range(2, m * n + 1))
-j += list(range(1, m * n))
-x = np.concatenate(([0], beta * np.ones(m - 2), [epsilon]))
-lowerdiag = np.concatenate((np.zeros(m - 1), np.tile(x, m - 2), np.zeros(m)))
+# ---------------------------
+# Sparse matrix assembly
+# ---------------------------
+I = []
+J = []
+V = []
 
-# lower diagonal two off
-i += list(range(3, m * n + 1))
-j += list(range(1, m * n - 1))
-x = np.concatenate((np.zeros(m - 1), [delta]))
-lowerdiag2 = np.concatenate((np.zeros(m - 2), np.tile(x, m - 2), np.zeros(m)))
+b = np.zeros((m * n, 1))
 
-# alpha diagonal left − m to the left of main diagonal, total length is mn−m
-i += list(range(m + 1, m * n + 1))
-j += list(range(1, m * n - m + 1))
-x = np.concatenate(([0], alpha * np.ones(m - 2), [0]))
-alphadiag1 = np.concatenate((np.tile(x, m - 2), np.zeros(m)))
+def idx(i, j):
+    return j * m + i
 
-# alpha diagonal right − m to the right of main diagonal, total length is mn−m
-i += list(range(1, m * n - m + 1))
-j += list(range(m + 1, m * n + 1))
-x = np.concatenate(([0], alpha * np.ones(m - 2), [0]))
-alphadiag2 = np.concatenate((np.zeros(m), np.tile(x, m - 2)))
+for j in range(n):
+    y = j * hy
+    for i in range(m):
+        kidx = idx(i, j)
 
-# construct sparse matrix
-values = np.concatenate([maindiag, upperdiag, upperdiag2, lowerdiag,
-                         lowerdiag2, alphadiag1, alphadiag2])
+        # Corner nodes -> force to T_inf
+        if (i == 0 or i == m-1) and (j == 0 or j == n-1):
+            I.append(kidx); J.append(kidx); V.append(1.0)
+            b[kidx, 0] = T_inf
+            continue
 
-Asparse = coo_matrix((values, (np.array(i) - 1, np.array(j) - 1)), shape=(m * n, m * n))
+        # Interior
+        if 0 < i < m-1 and 0 < j < n-1:
+            I.append(kidx); J.append(kidx); V.append(center_coef)
+            I.append(kidx); J.append(idx(i-1, j)); V.append(beta)
+            I.append(kidx); J.append(idx(i+1, j)); V.append(beta)
+            I.append(kidx); J.append(idx(i, j-1)); V.append(alpha)
+            I.append(kidx); J.append(idx(i, j+1)); V.append(alpha)
+            continue
 
+        # ----------------------------------------------------
+        # LEFT boundary: piecewise (heated vs non-heated)
+        # ----------------------------------------------------
+        if i == 0:
 
-# Assuming m, n, h, and Asparse are defined previously
+            heated = (0.0 <= y <= L_in)
 
-i = np.concatenate([np.arange(1, m+1), np.arange(2*m, (n-1)*m+1, m), np.arange((n-1)*m+1, n*m+1)]) - 1
-j = np.zeros(i.shape, dtype=int)
-values = np.concatenate([200 * np.ones(m), 30 * h * np.ones(n-2), 200 * np.ones(m)])
+            # Common stencil coefficients
+            coef_center = - (beta + 2.0 * alpha) + (2.0 * H) / hx
+            coef_right  = beta
 
-bsparse = coo_matrix((values, (i, j)), shape=(n*m, 1))
+            if j > 0:
+                I.append(kidx); J.append(idx(i, j-1)); V.append(alpha)
+            if j < n - 1:
+                I.append(kidx); J.append(idx(i, j+1)); V.append(alpha)
 
-w = spsolve(Asparse, bsparse.toarray())
+            I.append(kidx); J.append(idx(i+1, j)); V.append(coef_right)
+            I.append(kidx); J.append(kidx); V.append(coef_center)
 
-#plt.spy(Asparse)
-#plt.show()
+            # RHS
+            if heated:
+                # q'' enters the domain (Neumann + convection)
+                b[kidx, 0] = (2.0 * q_in) / hx + (2.0 * H * T_inf) / hx
+            else:
+                # Only convection (no input heat)
+                b[kidx, 0] = (2.0 * H * T_inf) / hx
 
-plt.imshow(w.reshape((n, m)), extent=(a, b, c, d), origin='lower')
+            continue
+
+        # RIGHT boundary (convection only)
+        if i == m - 1:
+            coef_center = - (beta + 2.0 * alpha) + (2.0 * H) / hx
+            coef_left = beta
+            if j > 0:
+                I.append(kidx); J.append(idx(i, j-1)); V.append(alpha)
+            if j < n - 1:
+                I.append(kidx); J.append(idx(i, j+1)); V.append(alpha)
+            I.append(kidx); J.append(idx(i-1, j)); V.append(coef_left)
+            I.append(kidx); J.append(kidx); V.append(coef_center)
+            b[kidx, 0] = (2.0 * H * T_inf) / hx
+            continue
+
+        # BOTTOM boundary
+        if j == 0:
+            coef_center = - (2.0 * beta + alpha) + (2.0 * H) / hy
+            I.append(kidx); J.append(kidx); V.append(coef_center)
+            if i > 0:
+                I.append(kidx); J.append(idx(i-1, j)); V.append(beta)
+            if i < m - 1:
+                I.append(kidx); J.append(idx(i+1, j)); V.append(beta)
+            I.append(kidx); J.append(idx(i, j+1)); V.append(alpha)
+            b[kidx, 0] = (2.0 * H * T_inf) / hy
+            continue
+
+        # TOP boundary
+        if j == n - 1:
+            coef_center = - (2.0 * beta + alpha) + (2.0 * H) / hy
+            I.append(kidx); J.append(kidx); V.append(coef_center)
+            if i > 0:
+                I.append(kidx); J.append(idx(i-1, j)); V.append(beta)
+            if i < m - 1:
+                I.append(kidx); J.append(idx(i+1, j)); V.append(beta)
+            I.append(kidx); J.append(idx(i, j-1)); V.append(alpha)
+            b[kidx, 0] = (2.0 * H * T_inf) / hy
+            continue
+
+# ---------------------------
+# Solve
+# ---------------------------
+A = coo_matrix((V, (I, J)), shape=(m * n, m * n)).tocsr()
+u = spsolve(A, b)
+U = u.reshape((n, m))
+
+plt.figure(figsize=(6,5))
+plt.imshow(U, extent=(0, Lx, 0, Ly), origin='lower', aspect='equal')
+plt.colorbar(label='°C')
+plt.xlabel('x (cm)')
+plt.ylabel('y (cm)')
+plt.title('Temperature (°C)')
 plt.show()
+
+print("Heated segment length L_in =", L_in)
+print("Uniform q'' =", q_in, "W/cm^2")
+print("Temperature range:", np.min(U), np.max(U))
