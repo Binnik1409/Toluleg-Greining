@@ -27,6 +27,9 @@ def build_part_of_A(n, a, b, c, alpha, theta):
     return i, j, gildi
 
      
+
+
+
 def build_matrix_A_b(n, Lx, Ly, H, K, P, delta, L_input):
     N = n * n
     hx = Lx / (n + 1)
@@ -77,3 +80,34 @@ def build_matrix_A_b(n, Lx, Ly, H, K, P, delta, L_input):
                 A[idx, idx] -= a / hy
 
     return A.tocsr(), b
+
+def plot_solution(u, n, Lx, Ly):
+    """
+    Plots the solution vector u as a heatmap.
+    
+    Parameters:
+    u : numpy array
+        The solution vector of size n*n.
+    n : int
+        The number of interior points in each dimension.
+    Lx : float
+        The length of the domain in the x-direction.
+    Ly : float
+        The length of the domain in the y-direction.
+    """
+    # Reshape u into a 2D array for plotting
+    U = u.reshape((n, n))
+    
+    # Create grid for plotting
+    x = np.linspace(0, Lx, n)
+    y = np.linspace(0, Ly, n)
+    X, Y = np.meshgrid(x, y)
+    
+    # Plotting
+    plt.figure(figsize=(8, 6))
+    cp = plt.contourf(X, Y, U, levels=50, cmap='viridis')
+    plt.colorbar(cp)
+    plt.title('Heatmap of the Solution')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.show()
