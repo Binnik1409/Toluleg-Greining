@@ -187,6 +187,25 @@ def index_to_xy_zero(idx, n, m):
     x = idx % m
     return x, y
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def build_system(breytur: list): 
     '''Breytur = [n, m, H, K, P, delta, Lx, Ly, L]'''
 
