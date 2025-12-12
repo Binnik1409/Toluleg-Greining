@@ -27,10 +27,6 @@ def build_part_of_A(n, a, b, c, alpha, theta):
         
     return i, j, gildi
 
-     
-
-
-    
 
 
 def build_matrix_A_b(n, Lx, Ly, H, K, P, delta, L_input):
@@ -116,7 +112,7 @@ def plot_solution(u, n, Lx, Ly):
     plt.show()
 
 
-def makePartOfA(jStart, jEnd, iFormula, iPlus, values)
+def makePartOfA(jStart, jEnd, iFormula, iPlus, values):
     coordVals = set()
     for j in enumerate(range(jStart, jEnd+1)):
         i = iFormula(j)
