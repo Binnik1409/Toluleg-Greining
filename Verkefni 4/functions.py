@@ -181,30 +181,38 @@ def innriRod(n, m, H, K, P, delta, Lx, Ly, L, r):
 
     return jStart, jEnd, iFormula, iPlus, values
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def index_to_xy_zero(idx, n, m):
     """Convert dot index → (x, y) in Python 0-based indexing."""
     idx -= 1
     y = idx // m
     x = idx % m
     return x, y
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def build_system(breytur: list): 
