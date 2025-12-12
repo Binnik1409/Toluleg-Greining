@@ -4,31 +4,6 @@ import math
 import functions as f
 import matplotlib.pyplot as plt
 
-def build_part_of_A(n, a, b, c, alpha, theta):        
-
-    i = [] 
-    j = []
-    gildi = []
-
-    for k in range(n):
-        
-        if k==0:
-            i += [k, k, k]
-            j += [k, k+1, k+2]
-            gildi += [a, b, c]
-        if k==n:
-            i += [k, k, k]
-            j += [k, k-1, k-2]
-            gildi += [c, b, a]
-        else:
-            i += [k, k, k]
-            j += [k-1, k, k+1]
-            gildi += [theta, alpha, theta]
-        
-    return i, j, gildi
-
-
-
 def build_matrix_A_b(n, Lx, Ly, H, K, P, delta, L_input):
     N = n * n
     hx = Lx / (n + 1)
@@ -205,3 +180,67 @@ def innriRod(n, m, H, K, P, delta, Lx, Ly, L, r):
     values = [hx**2, hy**2, ((2*H*(hx**2)*(hy**2))/(K*delta))-4, hy**2, hx**2]
 
     return jStart, jEnd, iFormula, iPlus, values
+
+def index_to_xy_zero(idx, n, m):
+    """Convert dot index → (x, y) in Python 0-based indexing."""
+    idx -= 1
+    y = idx // m
+    x = idx % m
+    return x, y
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def build_system(breytur: list): 
+    '''Breytur = [n, m, H, K, P, delta, Lx, Ly, L]'''
+
+    vinstriEfriA = f.makePartOfA(*f.vinstriEfri(*breytur))
+    vinstriNedriA = f.makePartOfA(*f.vinstriNedri(*breytur))
+    nidriA = f.makePartOfA(*f.nidri(*breytur))
+    uppiA = f.makePartOfA(*f.uppi(*breytur))
+    haegriA = f.makePartOfA(*f.hageri(*breytur))
+    innriRod1 = f.makePartOfA(*f.innriRod(*breytur,1))
+    innriRod2 = f.makePartOfA(*f.innriRod(*breytur,2))
+    innriRod3 = f.makePartOfA(*f.innriRod(*breytur,3))  
+
+    # Build matrix a from parts hear
+    all_parts = [
+        vinstriEfriA,
+        vinstriNedriA,
+        nidriA,
+        uppiA,
+        haegriA,
+        innriRod1,
+        innriRod2,
+        innriRod3
+    ]
+
+    vals = [] 
+    x_idx = []
+    y_idx = []
+    for part in all_parts:
+        for dot_index, val in part:
+            x, y = index_to_xy_zero(dot_index, breytur[0], breytur[1])
+            vals.append(val)
+            x_idx.append(x)
+            y_idx.append(y)
+
+    A = sp.csr_matrix((vals, (x_idx, y_idx)), shape=(breytur[0]+1, breytur[1]+1))
+    plt.imshow(A.toarray())
+    return A
