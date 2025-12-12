@@ -14,6 +14,9 @@ breytur = [n, m, H, K, P, delta, Lx, Ly, L]
 
 vinstriEfriA = f.makePartOfA(*f.vinstriEfri(*breytur))
 vinstriNedriA = f.makePartOfA(*f.vinstriNedri(*breytur))
+nidriA = f.makePartOfA(*f.nidri(*breytur))
+uppiA = f.makePartOfA(*f.uppi(*breytur))
+haegriA = f.makePartOfA(*f.haegri(*breytur))
 
 
 print(partA)

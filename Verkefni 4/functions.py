@@ -189,3 +189,18 @@ def uppi(n, m, H, K, P, delta, Lx, Ly, L):
     values = [-3+(2*H*hy)/K, 4, -1]
 
     return jStart, jEnd, iFormula, iPlus, values
+
+def innriRod(n, m, H, K, P, delta, Lx, Ly, L, r):
+    hx = Lx / m
+    hy = Ly / n
+
+    jStart = r*m+2
+    jEnd = r*m+m-1
+
+    iFormula = lambda j: j
+
+    iPlus = [-m, -1, 0, 1, m]
+
+    values = [hx**2, hy**2, ((2*H))]
+
+    return jStart, jEnd, iFormula, iPlus, values
