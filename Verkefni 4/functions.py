@@ -116,11 +116,12 @@ def makePartOfA(jStart, jEnd, iFormula, iPlus, values):
     coordVals = set()
     for s, j in enumerate(range(jStart, jEnd+1)):
         i = iFormula(j)
+        temp_coords = []
         for k, x in enumerate(values):
-            coordVals.add((i+iPlus[k], x))
+            temp_coords.append((i+iPlus[k], x))
+        
+        coordVals.add(frozenset(temp_coords))
     return coordVals
-
-# def makeA(n, m, H, K, P, delta, Lx, Ly, L):
 
 def vinstriEfri(n, m, H, K, P, delta, Lx, Ly, L):
     hx = Lx / m
@@ -148,7 +149,7 @@ def vinstriNedri(n, m, H, K, P, delta, Lx, Ly, L):
 
     return jStart, jEnd, iFormula, iPlus, values
 
-def hageri(n, m, H, K, P, delta, Lx, Ly, L):
+def haegri(n, m, H, K, P, delta, Lx, Ly, L):
     hx = Lx / m
 
     jStart = 1
@@ -179,7 +180,7 @@ def nidri(n, m, H, K, P, delta, Lx, Ly, L):
 def uppi(n, m, H, K, P, delta, Lx, Ly, L):
     hy = Ly / n
 
-    jStart = n*m-m+1
+    jStart = n*m-m+2
     jEnd = n*m-1
 
     iFormula = lambda j: j
@@ -201,6 +202,6 @@ def innriRod(n, m, H, K, P, delta, Lx, Ly, L, r):
 
     iPlus = [-m, -1, 0, 1, m]
 
-    values = [hx**2, hy**2, ((2*H))]
+    values = [hx**2, hy**2, ((2*H*(hx**2)*(hy**2))/(K*delta))-4, hy**2, hx**2]
 
     return jStart, jEnd, iFormula, iPlus, values
