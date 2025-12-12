@@ -116,10 +116,80 @@ def plot_solution(u, n, Lx, Ly):
     plt.show()
 
 
-def makePartOfA(jStart, jEnd, iFormula, iPlus, values)
+def makePartOfA(jStart, jEnd, iFormula, iPlus, values):
     coordVals = set()
-    for j in enumerate(range(jStart, jEnd+1)):
+    for s, j in enumerate(range(jStart, jEnd+1)):
         i = iFormula(j)
         for k, x in enumerate(values):
-            coordVals.add(i+iPlus[k], x)
+            coordVals.add((i+iPlus[k], x))
     return coordVals
+
+# def makeA(n, m, H, K, P, delta, Lx, Ly, L):
+
+def vinstriEfri(n, m, H, K, P, delta, Lx, Ly, L):
+    hx = Lx / m
+    
+    jStart = math.floor((L/Ly)*(n-1))+1
+    jEnd = n-1
+
+    iFormula = lambda j: j*m+1
+    
+    iPlus = [0, 1, 2]
+
+    values = [(2*H*hx/K)-3, 4, -1]
+
+    return jStart, jEnd, iFormula, iPlus, values
+
+def vinstriNedri(n, m, H, K, P, delta, Lx, Ly, L):
+    jStart = 0
+    jEnd = math.floor((L/Ly)*(n-1))
+
+    iFormula = lambda j: j*m+1
+
+    iPlus = [0, 1, 2]
+
+    values = [3*L*delta*K, -4*L*delta*K, L*delta*K]
+
+    return jStart, jEnd, iFormula, iPlus, values
+
+def hageri(n, m, H, K, P, delta, Lx, Ly, L):
+    hx = Lx / m
+
+    jStart = 1
+    jEnd = n
+
+    iFormula = lambda j: j*m
+
+    iPlus = [1, -1, -2]
+
+    values = [-3+(2*H*hx)/K, 4, -1]
+
+    return jStart, jEnd, iFormula, iPlus, values
+
+def nidri(n, m, H, K, P, delta, Lx, Ly, L):
+    hy = Ly / n
+
+    jStart = 2
+    jEnd = m-1
+
+    iFormula = lambda j: j
+
+    iPlus = [0, m, 2*m]
+
+    values = [-3+(2*H*hy)/K, 4, -1]
+
+    return jStart, jEnd, iFormula, iPlus, values
+
+def uppi(n, m, H, K, P, delta, Lx, Ly, L):
+    hy = Ly / n
+
+    jStart = n*m-m+1
+    jEnd = n*m-1
+
+    iFormula = lambda j: j
+
+    iPlus = [0, -m, -2*m]
+
+    values = [-3+(2*H*hy)/K, 4, -1]
+
+    return jStart, jEnd, iFormula, iPlus, values
