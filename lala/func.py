@@ -11,9 +11,9 @@ def idx(i, j, n):
     return j + i*n
 
 def build_system(m, n, Lx, Ly, K, H, delta, P, L):
-    hx = Lx/(m-1)
-    hy = Ly/(n-1)
-    l_ratio = L/Ly
+
+    hx = Lx/(m)
+    hy = Ly/(n)
     alpha = 2*H/(K*delta)
 
     N = m*n
@@ -24,8 +24,6 @@ def build_system(m, n, Lx, Ly, K, H, delta, P, L):
         for j in range(n):
             k = idx(i, j, n)
 
-            x = i*hx
-            y = j*hy
 
             # interior point
             if 0 < i < m-1 and 0 < j < n-1:
@@ -40,16 +38,15 @@ def build_system(m, n, Lx, Ly, K, H, delta, P, L):
             # Left boundary (x = 0)
             if i == 0:
 
-                if y <= L:
+                A[k, k] = -1/hx - H/K
+                A[k, idx(1, j, n)] = 1/hx
+
+                if j*hy <= L:
                     # LOWER HALF: heat input BC
-                    A[k, k] = -1/hx
-                    A[k, idx(1, j, n)] = 1/hx
                     b[k] = -P / (L * delta * K)
 
                 else:
                     # UPPER HALF: convection BC
-                    A[k, k] = -1/hx - H/K
-                    A[k, idx(1, j, n)] = 1/hx
                     b[k] = 0
 
                 continue
@@ -118,13 +115,15 @@ def solve_with_offset(m, n, offset, L, Lx, Ly, K, H, delta, P):
             # Left boundary x = 0
             # -----------------------------
             if i == 0:
-                A[k, k] = -1/hx - H/K
-                A[k, idx(1, j, n)] = 1/hx
 
                 # Apply heating only on offset ≤ y ≤ offset + L
                 if is_heat_segment(y):
+                    A[k, k] = -1/hx
+                    A[k, idx(1, j, n)] = 1/hx
                     b[k] = -P / (L * delta * K)
                 else:
+                    A[k, k] = -1/hx - H/K
+                    A[k, idx(1, j, n)] = 1/hx
                     b[k] = 0
                 continue
 

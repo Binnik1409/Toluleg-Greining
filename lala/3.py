@@ -14,10 +14,10 @@ H = 0.005
 def solve_maxT(m):
     A, b = f.build_system(m, m, Lx, Ly, K, H, delta, P, L)
     v = spla.spsolve(A, b)
-    return v.max()
+    return v.max() + 20
 
 m_values = [10,20,30,40,50,60,70,80]
-ref = solve_maxT(120)   # very fine grid
+ref = solve_maxT(120) + 20  # very fine grid°
 
 errors = []
 hs = []
