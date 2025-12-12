@@ -27,10 +27,6 @@ def build_part_of_A(n, a, b, c, alpha, theta):
         
     return i, j, gildi
 
-     
-
-
-    
 
 
 def build_matrix_A_b(n, Lx, Ly, H, K, P, delta, L_input):
