@@ -14,3 +14,4 @@ def create_matrix_A(n, alpha, beta):
     matrix[n-1][n-1] = 1
 
     return matrix
+
