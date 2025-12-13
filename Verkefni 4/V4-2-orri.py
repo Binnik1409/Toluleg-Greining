@@ -1,6 +1,7 @@
 import functions as f
 import scipy.sparse as sp
 import numpy as np
+import matplotlib.pyplot as plt
 
 Lx = Ly = 2
 delta = 0.1
@@ -60,13 +61,9 @@ end = time.perf_counter()
 
 print(end-start)
 
-
-import numpy as np
-import matplotlib.pyplot as plt
-
 u = np.asarray(sol).reshape((n, m))
 
-T = u + 20.0                           
+T = u + 20.0
 
 # plt.imshow(T, origin="lower", extent=[0, Lx, 0, Ly], aspect="auto")
 # plt.colorbar(label="Temperature (°C)")
