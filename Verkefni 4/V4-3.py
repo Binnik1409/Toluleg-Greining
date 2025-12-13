@@ -62,11 +62,11 @@ def solve_once(n):
 
     return np.max(T), hx
 
-ns = [10, 20, 30, 40, 50, 60]
+ns = [10, 20, 30, 40, 50, 60, 70, 80]
 errors = []
 hs = []
 
-Tref, _ = solve_once(200)
+Tref, _ = solve_once(500)
 
 for n in ns:
     Tmax, h = solve_once(n)
@@ -82,7 +82,7 @@ p, c = np.polyfit(np.log(hs), np.log(errors), 1)
 print("Estimated order:", p)
 
 plt.loglog(hs, errors, "o-")
-plt.loglog(hs, np.exp(c)*hs**p, "--", label=f"slope ≈ {p:.2f}")
+plt.loglog(hs, np.exp(c)*hs**p, "--", label=f"slope = {p:.2f}")
 plt.xlabel("h")
 plt.ylabel("error in Tmax")
 plt.legend()
