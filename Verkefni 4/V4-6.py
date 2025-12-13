@@ -35,8 +35,8 @@ P = 5
 K = 1.68
 H = 0.005
 U = 20
-n = 10
-m = 10
+n = 200
+m = 200
 POWER_START = 2
 POWER_END = 8
 
