@@ -87,19 +87,20 @@ def plot_solution(u, n, Lx, Ly):
     plt.show()
 
 
-def makePartOfA(jStart, jEnd, iFormula, iPlus, values):
+def makePartOfA(jStart, jEnd, iFormula, iPlus, values, jLoc):
     coordVals = set()
     for s, j in enumerate(range(jStart, jEnd+1)):
         i = iFormula(j)
         temp_coords = []
         for k, x in enumerate(values):
-            temp_coords.append((i+iPlus[k], x))
-        
+            temp_coords.append((x, jLoc, i+iPlus[k]-1))
         coordVals.add(frozenset(temp_coords))
-    return coordVals
+        jLoc += 1
+    
+    return coordVals, jLoc
 
 def vinstriEfri(n, m, H, K, P, delta, Lx, Ly, L):
-    hx = Lx / m
+    hx = Lx / (m-1)
     
     jStart = math.floor((L/Ly)*(n-1))+1
     jEnd = n-1
@@ -120,26 +121,26 @@ def vinstriNedri(n, m, H, K, P, delta, Lx, Ly, L):
 
     iPlus = [0, 1, 2]
 
-    values = [3*L*delta*K, -4*L*delta*K, L*delta*K]
+    values = [-3, 4, -1]
 
     return jStart, jEnd, iFormula, iPlus, values
 
 def haegri(n, m, H, K, P, delta, Lx, Ly, L):
-    hx = Lx / m
+    hx = Lx / (m-1)
 
     jStart = 1
     jEnd = n
 
     iFormula = lambda j: j*m
 
-    iPlus = [1, -1, -2]
+    iPlus = [0, -1, -2]
 
     values = [-3+(2*H*hx)/K, 4, -1]
 
     return jStart, jEnd, iFormula, iPlus, values
 
 def nidri(n, m, H, K, P, delta, Lx, Ly, L):
-    hy = Ly / n
+    hy = Ly / (n-1)
 
     jStart = 2
     jEnd = m-1
@@ -153,7 +154,7 @@ def nidri(n, m, H, K, P, delta, Lx, Ly, L):
     return jStart, jEnd, iFormula, iPlus, values
 
 def uppi(n, m, H, K, P, delta, Lx, Ly, L):
-    hy = Ly / n
+    hy = Ly / (n-1)
 
     jStart = n*m-m+2
     jEnd = n*m-1
@@ -167,8 +168,8 @@ def uppi(n, m, H, K, P, delta, Lx, Ly, L):
     return jStart, jEnd, iFormula, iPlus, values
 
 def innriRod(n, m, H, K, P, delta, Lx, Ly, L, r):
-    hx = Lx / m
-    hy = Ly / n
+    hx = Lx / (m-1)
+    hy = Ly / (n-1)
 
     jStart = r*m+2
     jEnd = r*m+m-1
@@ -177,7 +178,7 @@ def innriRod(n, m, H, K, P, delta, Lx, Ly, L, r):
 
     iPlus = [-m, -1, 0, 1, m]
 
-    values = [hx**2, hy**2, ((2*H*(hx**2)*(hy**2))/(K*delta))-4, hy**2, hx**2]
+    values = [hx**2, hy**2, -2*(hx**2+hy**2+(H*(hx**2)*(hy**2))/(K*delta)), hy**2, hx**2]
 
     return jStart, jEnd, iFormula, iPlus, values
 
