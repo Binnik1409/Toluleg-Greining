@@ -15,20 +15,12 @@ H = 0.005
 
 m = n = 10
 
-A, b = f.build_system(m, n, Lx, Ly, K, H, delta, P, L)
-v = spla.spsolve(A, b)
-U = v.reshape((m, n))
-U = U + 20  # convert to °C above ambient
+A, B = f.heatsink_fd(Lx, Ly, delta, H, K, P, m, n, L)
+u = spla.spsolve(A, B)
 
-print("Max temperature (°C above ambient):", U.max())
-print("Should be ≈ 164.9626 °C")  # from PDF
-
-X = np.linspace(0, Lx, m)
-Y = np.linspace(0, Ly, n)
-XX, YY = np.meshgrid(X, Y)
-
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.plot_surface(XX, YY, U.T)
-plt.show()
+U = u.reshape((n, m))
+print("Temperature at each grid point (°C):")
+print(U)
+print(f"Max temperature: {np.max(U):.2f} °C")
+print(f"Min temperature: {np.min(U):.2f} °C")
 

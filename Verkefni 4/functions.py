@@ -183,47 +183,16 @@ def innriRod(n, m, H, K, P, delta, Lx, Ly, L, r):
     return jStart, jEnd, iFormula, iPlus, values
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def index_to_xy_zero(idx, n, m):
-    """Convert dot index → (x, y) in Python 0-based indexing."""
-    idx -= 1
-    y = idx // m
-    x = idx % m
-    return x, y
-
-
 def build_system(breytur: list): 
     '''Breytur = [n, m, H, K, P, delta, Lx, Ly, L]'''
+
+    N = breytur[0] * breytur[1]
 
     vinstriEfriA = f.makePartOfA(*f.vinstriEfri(*breytur))
     vinstriNedriA = f.makePartOfA(*f.vinstriNedri(*breytur))
     nidriA = f.makePartOfA(*f.nidri(*breytur))
     uppiA = f.makePartOfA(*f.uppi(*breytur))
-    haegriA = f.makePartOfA(*f.hageri(*breytur))
+    haegriA = f.makePartOfA(*f.haegri(*breytur))
     innriRod1 = f.makePartOfA(*f.innriRod(*breytur,1))
     innriRod2 = f.makePartOfA(*f.innriRod(*breytur,2))
     innriRod3 = f.makePartOfA(*f.innriRod(*breytur,3))  
@@ -240,18 +209,19 @@ def build_system(breytur: list):
         innriRod3
     ]
 
-    vals = [] 
-    x_idx = []
-    y_idx = []
-    for part in all_parts:
-        for dot_index, val in part:
-            x, y = index_to_xy_zero(dot_index, breytur[0], breytur[1])
-            vals.append(val)
-            x_idx.append(x)
-            y_idx.append(y)
+    rows = []
+    cols = []
+    vals = []
 
-    A = sp.csr_matrix((vals, (x_idx, y_idx)), shape=(breytur[0]+1, breytur[1]+1))
-    plt.imshow(A.toarray())
+    for part in all_parts:
+        for idx, val in part:
+            row = idx - 1
+            rows.append(row)
+            cols.append(row)
+            vals.append(val)
+
+        A = sp.csr_matrix((vals, (rows, cols)), shape=(N, N))
+
     return A
 
 def doEverything(n, m, H=0.005, K=1.68, P=5, delta=0.1, Lx=2, Ly=2, L=2, U=20):

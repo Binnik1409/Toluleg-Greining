@@ -4,6 +4,107 @@ import scipy.sparse.linalg as spla
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
+import numpy as np
+from scipy.sparse import lil_matrix, csr_matrix
+from scipy.sparse.linalg import spsolve
+
+import numpy as np
+from scipy.sparse import lil_matrix, csr_matrix
+from scipy.sparse.linalg import spsolve
+
+def heatsink_fd(Lx, Ly, delta, H, K, P, nx, ny, L_in, T_amb=20):
+    """
+    Builds sparse matrix A and vector B for the steady-state temperature distribution
+    of a rectangular fin (heatsink blade) using finite differences, including ambient temperature.
+
+    Parameters:
+    Lx, Ly : float - size of the blade (m)
+    delta : float - thickness (m)
+    H : float - convective heat transfer coefficient (W/m^2K)
+    K : float - thermal conductivity (W/mK)
+    P : float - total power input (W)
+    nx, ny : int - number of grid points in x and y
+    L_in : float - length of power input at left edge (m)
+    T_amb : float - ambient temperature (°C)
+
+    Returns:
+    A : csr_matrix - sparse system matrix
+    B : ndarray - RHS vector including ambient temperature
+    """
+    dx = Lx / (nx - 1)
+    dy = Ly / (ny - 1)
+    N = nx * ny
+
+    A = lil_matrix((N, N))
+    B = np.zeros(N)
+
+    def idx(i, j):
+        return j * nx + i
+
+    for j in range(ny):
+        for i in range(nx):
+            k = idx(i, j)
+
+            # Interior points
+            if 0 < i < nx-1 and 0 < j < ny-1:
+                A[k, idx(i,j)] = -2/dx**2 - 2/dy**2 + 2*H/(K*delta)
+                A[k, idx(i+1,j)] = 1/dx**2
+                A[k, idx(i-1,j)] = 1/dx**2
+                A[k, idx(i,j+1)] = 1/dy**2
+                A[k, idx(i,j-1)] = 1/dy**2
+                B[k] = 2*H/(K*delta) * T_amb  # ambient contribution
+
+            else:
+                # Left edge
+                if i == 0:
+                    if j*dy <= L_in:  # Power input region
+                        # u1 - u0 / dx = -P/(L δ K)
+                        A[k, idx(i,j)] = 1
+                        A[k, idx(i+1,j)] = -1
+                        B[k] = dx * P / (L_in * delta * K) + T_amb  # include ambient
+                    else:  # Convection
+                        A[k, idx(i,j)] = 1/dx + H/K
+                        A[k, idx(i+1,j)] = -1/dx
+                        B[k] = H/K * T_amb  # convection to ambient
+                # Right edge (convection)
+                elif i == nx-1:
+                    A[k, idx(i,j)] = 1/dx + H/K
+                    A[k, idx(i-1,j)] = -1/dx
+                    B[k] = H/K * T_amb
+                # Bottom edge (convection)
+                elif j == 0:
+                    A[k, idx(i,j)] = 1/dy + H/K
+                    A[k, idx(i,j+1)] = -1/dy
+                    B[k] = H/K * T_amb
+                # Top edge (convection)
+                elif j == ny-1:
+                    A[k, idx(i,j)] = 1/dy + H/K
+                    A[k, idx(i,j-1)] = -1/dy
+                    B[k] = H/K * T_amb
+
+    A_csr = csr_matrix(A)
+    return A_csr, B
+
+# ---------------- Example usage ----------------
+Lx = 0.1      # meters
+Ly = 0.05
+delta = 0.002
+H = 10        # W/m^2K
+K = 200       # W/mK
+P = 50        # W
+nx, ny = 20, 10
+L_in = 0.02
+
+A, B = heatsink_fd(Lx, Ly, delta, H, K, P, nx, ny, L_in)
+
+# Solve the system
+u = spsolve(A, B)
+
+# Reshape solution into 2D grid for plotting
+U = u.reshape((ny, nx))
+print("Temperature at each grid point:")
+print(U)
+
 
 
 def idx(i, j, n):
