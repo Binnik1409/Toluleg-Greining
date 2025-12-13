@@ -27,7 +27,6 @@ for k in range(1, n-1):
     for x in inner_row:
         innriPunktar.add(x)
 
-
 vinstriEfri, jLoc0 = f.makePartOfA(*f.vinstriEfri(*breytur), jLoc)
 vinstriNedri, jLoc1 = f.makePartOfA(*f.vinstriNedri(*breytur), jLoc0)
 nidri, jLoc0 = f.makePartOfA(*f.nidri(*breytur), jLoc1)
@@ -58,7 +57,6 @@ A = sp.coo_matrix((values, (rows, cols)), shape=(n*m, n*m)).tocsr()
 sol = sp.linalg.spsolve(A, b)
 
 end = time.perf_counter()
-
 print(end-start)
 
 u = np.asarray(sol).reshape((n, m))
