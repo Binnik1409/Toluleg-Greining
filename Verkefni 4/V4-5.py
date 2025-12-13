@@ -12,7 +12,7 @@ H = 0.005
 U = 20
 n = 10
 m = 10
-L = 2               # dæmi 5: afl bara á neðri helming vinstri jaðars
+L = 2               
 hx = Lx/(m-1)        
 
 breytur = [n, m, H, K, P, delta, Lx, Ly, L]
@@ -56,7 +56,6 @@ values, rows, cols = map(np.array, zip(*megalist))
 A = sp.coo_matrix((values, (rows, cols)), shape=(n*m, n*m)).tocsr()
 
 sol = sp.linalg.spsolve(A, b)
-
 end = time.perf_counter()
 print(end-start)
 
