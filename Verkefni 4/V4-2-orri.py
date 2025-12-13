@@ -63,7 +63,7 @@ print(end-start)
 
 u = np.asarray(sol).reshape((n, m))
 
-T = u + 20.0                           
+T = u + 20.0
 
 plt.imshow(T, origin="lower", extent=[0, Lx, 0, Ly], aspect="auto")
 plt.colorbar(label="Temperature (°C)")
