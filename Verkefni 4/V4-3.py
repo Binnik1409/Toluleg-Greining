@@ -66,11 +66,9 @@ ns = [10, 20, 30, 40, 50, 60]
 errors = []
 hs = []
 
-print("Computing reference solution...")
-Tref, _ = solve_once(120)
+Tref, _ = solve_once(200)
 
 for n in ns:
-    print("n =", n)
     Tmax, h = solve_once(n)
     errors.append(abs(Tmax - Tref))
     hs.append(h)
