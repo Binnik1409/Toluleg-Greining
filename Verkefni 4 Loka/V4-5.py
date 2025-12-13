@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-Lx = Ly = 2   
+Lx = Ly = 4          # breytt (var 2)
 delta = 0.1
 P = 5
 K = 1.68
@@ -73,3 +73,7 @@ ax.set_xlabel("x (cm)")
 ax.set_ylabel("y (cm)")
 ax.set_zlabel("Temperature (°C)")
 plt.show()
+
+
+
+
