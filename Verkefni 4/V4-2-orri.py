@@ -47,8 +47,8 @@ _, vinstriNedriRows, _ = zip(*[x for y in vinstriNedri for x in y])
 length = len(list(set(vinstriNedriRows)))
 
 vinstriNedriRows = np.array(list(set(vinstriNedriRows)))
-bValues = np.array([-2*P*hx/(L*delta*K) for _ in range(length)])
-columns = np.array([0 for x in range(length)])
+bValues = (-2*P*hx/(L*delta*K))*np.ones(length)
+columns = np.zeros(length)
 
 b = sp.coo_matrix((bValues, (vinstriNedriRows, columns)), shape=(n*m, 1)).tocsr()
 
@@ -77,7 +77,7 @@ X, Y = np.meshgrid(x, y)
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
-ax.plot_surface(X, Y, T)                     # optional: add cmap=...
+ax.plot_surface(X, Y, T)                     
 ax.set_xlabel("x (cm)")
 ax.set_ylabel("y (cm)")
 ax.set_zlabel("Temperature (°C)")
