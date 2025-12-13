@@ -3,14 +3,14 @@ import scipy.sparse as sp
 import numpy as np
 import matplotlib.pyplot as plt
 
-Lx = Ly = 4
+Lx = Ly = 2
 delta = 0.1
 P = 5
 K = 1.68
 H = 0.005
 # U = 20
-n = 300
-m = 300
+n = 10
+m = 10
 L = 2
 hx = Lx/(m-1)
 
