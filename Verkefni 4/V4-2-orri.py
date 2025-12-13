@@ -68,8 +68,20 @@ u = np.asarray(sol).reshape((n, m))
 
 T = u + 20.0                           
 
-plt.imshow(T, origin="lower", extent=[0, Lx, 0, Ly], aspect="auto")
-plt.colorbar(label="Temperature (°C)")
-plt.xlabel("x (cm)")
-plt.ylabel("y (cm)")
+# plt.imshow(T, origin="lower", extent=[0, Lx, 0, Ly], aspect="auto")
+# plt.colorbar(label="Temperature (°C)")
+# plt.xlabel("x (cm)")
+# plt.ylabel("y (cm)")
+# plt.show()
+
+x = np.linspace(0, Lx, m)
+y = np.linspace(0, Ly, n)
+X, Y = np.meshgrid(x, y)
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection="3d")
+ax.plot_surface(X, Y, T)                     # optional: add cmap=...
+ax.set_xlabel("x (cm)")
+ax.set_ylabel("y (cm)")
+ax.set_zlabel("Temperature (°C)")
 plt.show()

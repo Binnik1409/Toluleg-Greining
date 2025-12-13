@@ -253,3 +253,60 @@ def build_system(breytur: list):
     A = sp.csr_matrix((vals, (x_idx, y_idx)), shape=(breytur[0]+1, breytur[1]+1))
     plt.imshow(A.toarray())
     return A
+
+def doEverything(n, m, H=0.005, K=1.68, P=5, delta=0.1, Lx=2, Ly=2, L=2, U=20):
+    hx = Lx/(m-1)
+
+    breytur = [n, m, H, K, P, delta, Lx, Ly, L]
+
+    jLoc_use = 0
+    innriPunktar = set()
+    for k in range(1, n-1):   
+        inner_row, jLoc = makePartOfA(*innriRod(*breytur, k), jLoc_use)
+        jLoc_use = jLoc
+        for x in inner_row:
+            innriPunktar.add(x)
+    a1 = vinstriEfri(*breytur)
+    a2 = vinstriNedri(*breytur)
+    a3 = nidri(*breytur)
+    a4 = uppi(*breytur)
+    a5 = haegri(*breytur)
+    
+    vinstriEfri, jLoc0 = makePartOfA(*a1, jLoc)
+    vinstriNedri, jLoc1 = makePartOfA(*a2, jLoc0)
+    nidri, jLoc0 = makePartOfA(*a3, jLoc1)
+    uppi, jLoc1 = makePartOfA(*a4, jLoc0)
+    haegri, jLoc0 = makePartOfA(*a5, jLoc1)
+
+    megalist = [
+        *[x for y in vinstriEfri for x in y],
+        *[x for y in vinstriNedri for x in y],
+        *[x for y in nidri for x in y],
+        *[x for y in uppi for x in y],
+        *[x for y in haegri for x in y],
+        *[x for y in innriPunktar for x in y]
+    ]
+
+    _, vinstriNedriRows, _ = zip(*[x for y in vinstriNedri for x in y])
+    length = len(list(set(vinstriNedriRows)))
+
+    vinstriNedriRows = np.array(list(set(vinstriNedriRows)))
+    bValues = np.array([-2*P*hx/(L*delta*K) for _ in range(length)])
+    columns = np.array([0 for x in range(length)])
+
+    b = sp.coo_matrix((bValues, (vinstriNedriRows, columns)), shape=(n*m, 1)).tocsr()
+
+    values, rows, cols = map(np.array, zip(*megalist))
+    A = sp.coo_matrix((values, (rows, cols)), shape=(n*m, n*m)).tocsr()
+
+    sol = sp.linalg.spsolve(A, b)
+
+    u = np.asarray(sol).reshape((n, m))
+
+    T = u + U                         
+
+    plt.imshow(T, origin="lower", extent=[0, Lx, 0, Ly], aspect="auto")
+    plt.colorbar(label="Temperature (°C)")
+    plt.xlabel("x (cm)")
+    plt.ylabel("y (cm)")
+    plt.show()
