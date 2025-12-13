@@ -1,6 +1,7 @@
 import functions as f
 import scipy.sparse as sp
 import numpy as np
+import matplotlib.pyplot as plt
 
 Lx = Ly = 2
 delta = 0.1
@@ -59,10 +60,6 @@ sol = sp.linalg.spsolve(A, b)
 end = time.perf_counter()
 
 print(end-start)
-
-
-import numpy as np
-import matplotlib.pyplot as plt
 
 u = np.asarray(sol).reshape((n, m))
 
