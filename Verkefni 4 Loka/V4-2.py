@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-Lx = Ly = 2   
+Lx = Ly = 2
 delta = 0.1
 P = 5
 K = 1.68
