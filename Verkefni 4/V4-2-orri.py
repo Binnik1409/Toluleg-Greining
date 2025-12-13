@@ -8,9 +8,9 @@ delta = 0.1
 P = 5
 K = 1.68
 H = 0.005
-U = 20
-n = 100
-m = 100
+# U = 20
+n = 300
+m = 300
 L = 2
 hx = Lx/(m-1)
 
@@ -65,6 +65,7 @@ u = np.asarray(sol).reshape((n, m))
 
 T = u + 20.0
 
+print(T.max())
 # plt.imshow(T, origin="lower", extent=[0, Lx, 0, Ly], aspect="auto")
 # plt.colorbar(label="Temperature (°C)")
 # plt.xlabel("x (cm)")
