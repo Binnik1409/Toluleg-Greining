@@ -1,6 +1,7 @@
 import functions as f
 import scipy.sparse as sp
 import numpy as np
+import math
 
 def vinstriKalt(n, m, H, K, P, delta, Lx, Ly, L, jStart, jEnd):
     hx = Lx / (m-1)
@@ -28,7 +29,7 @@ def vinstriHeitt(n, m, H, K, P, delta, Lx, Ly, L, jStart, jEnd):
 
     return jStart, jEnd, iFormula, iPlus, values
 
-Lx = Ly = 100
+Lx = Ly = 10
 delta = 0.1
 P = 5
 K = 1.68
@@ -39,8 +40,8 @@ m = 10
 POWER_START = 2
 POWER_END = 8
 
-hot_start = round(POWER_START/Ly)
-hot_end = L = round(POWER_END/Ly)
+hot_start = math.ceil(n*POWER_START/Ly)
+hot_end = L = math.floor(n*POWER_END/Ly)
 hx = Lx/(m-1)
 
 breytur = [n, m, H, K, P, delta, Lx, Ly, L]
@@ -57,10 +58,10 @@ for k in range(1, n-1):
         innriPunktar.add(x)
 
 
-vinstriKalt1, jLoc0 = f.makePartOfA(*vinstriKalt(*breytur, 0, hot_start), jLoc)
+vinstriKalt1, jLoc0 = f.makePartOfA(*vinstriKalt(*breytur, 0, hot_start-1), jLoc)
 vinstriKalt2, jLoc1 = f.makePartOfA(*vinstriKalt(*breytur, hot_end+1, n-1), jLoc0)
 vinstriEfri, jLoc0 = vinstriKalt1.union(vinstriKalt2), jLoc1
-vinstriNedri, jLoc1 = f.makePartOfA(*vinstriHeitt(*breytur, hot_start+1, hot_end), jLoc0)
+vinstriNedri, jLoc1 = f.makePartOfA(*vinstriHeitt(*breytur, hot_start, hot_end), jLoc0)
 nidri, jLoc0 = f.makePartOfA(*f.nidri(*breytur), jLoc1)
 uppi, jLoc1 = f.makePartOfA(*f.uppi(*breytur), jLoc0)
 haegri, jLoc0 = f.makePartOfA(*f.haegri(*breytur), jLoc1)
